@@ -370,23 +370,3 @@ bottlenecks, reproducibility, SQL vs Python metric agreement, persistence atomic
 counterfactual runs + integrity checks. Evaluation matrix (`scripts/run_benchmarks.py`): normal, one blocked road, one
 unavailable destination, reduced throughput, increased population, uneven origins, multiple bottlenecks × 3 strategies × seeds,
 recorded in SQL and exported to CSV. Future: calibration against observed drill data.
-
-### Likely viva questions
-
-1. **Why SQL here – isn't a CSV enough?** Experiments have relational structure (scenarios ↔ runs ↔ agents ↔ events). SQL gives
-   integrity (FKs/CHECKs), atomic persistence, and set-based analytics (joins, window functions) without loading event tables in memory.
-2. **Why is the shortest path not always best?** It ignores load: many agents share the same cheap edges, so queues form and
-   actual travel time exceeds the free-flow estimate.
-3. **How do you keep Dijkstra valid with congestion costs?** All weights are `t0·(1+…)+…` with `t0 > 0` and non-negative added terms, so they are strictly positive; closed edges are removed (weight `None`).
-4. **How is the evaluation fair?** Same stored agents, network, destinations, closures and seed; only the routing policy differs. Interventions create a derived scenario with a recorded change set.
-5. **What is a bottleneck vs busy road?** Bottleneck = near-capacity occupancy plus persistent queues delaying many agents; a busy road without queue is not flagged.
-6. **Why can completion rate be < 100 %?** Time limit reached (unresolved), no route/destination (failed), or destination capacity too small. Denominator is always all agents.
-7. **How do you handle reproducibility?** One seeded RNG for population; deterministic engine and FIFO tie-breaking; checked by comparing full event fingerprints.
-8. **What happens when a road closes mid-run?** Agents on it finish it; no new entries; affected agents replan; if no route remains they become `UNABLE_TO_EVACUATE`.
-9. **How is the 95th percentile computed?** Nearest-rank: value at rank ⌈0.95 n⌉ among evacuated agents; same definition in Python and SQL (tested equal).
-10. **Why queue at nodes instead of on edges?** Avoids artificial deadlocks of cyclic spill-back; documented limitation.
-11. **What would you do to validate the model?** Compare with observed drill timings, calibrate speed/capacity/delay distributions, run sensitivity analysis, review by safety experts.
-12. **Is the OSM data reliable for campus exits?** No; OSM has no verified building exits or shelters, so destinations are user-defined and labelled hypothetical.
-13. **How do you avoid re-downloading maps on every Streamlit rerun?** Downloads occur only on an explicit button/script; results are cached as GraphML keyed by (centre, radius, type) and the network is stored once per fingerprint in SQLite.
-14. **How do you stop duplicate runs on reruns?** Runs start only from button clicks guarded by a busy flag; persistence is transactional so a partial run can never appear complete.
-15. **Where are the limitations of the congestion-aware strategy?** It uses current occupancy/queues only (no forecasting), may oscillate if everyone switches (mitigated by the improvement threshold and interval), and may create more, smaller bottlenecks.
