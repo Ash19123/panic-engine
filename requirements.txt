@@ -1,0 +1,15 @@
+# Core (required for the full synthetic demo, tests and dashboard)
+networkx>=3.2
+numpy>=1.26
+pandas>=2.1
+streamlit>=1.33
+pydeck>=0.8.0
+segno>=1.5   # QR code for the phone view
+folium>=0.16
+streamlit-folium>=0.20
+plotly>=5.20
+pytest>=8.0
+
+# Optional: real OpenStreetMap download (pulls in geopandas/shapely).
+# The app, tests and synthetic demo work without it; install with:
+#     python -m pip install -r requirements-osm.txt

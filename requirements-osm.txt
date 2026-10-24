@@ -1,0 +1,4 @@
+-r requirements.txt
+osmnx>=2.0
+geopandas>=0.14
+shapely>=2.0
