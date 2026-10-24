@@ -26,21 +26,23 @@ th{background:var(--panel)}code{background:var(--panel);padding:1px 5px;border-r
 <div class="panel"><p><b>Educational model.</b> This is a college project, not a real alert system and not a validated predictor.
 Safe stops are hypothetical, not official shelters. Nothing here sends a message to anyone.</p></div>
 
-<h2>Why</h2>
-<p>Most people do not have a phone in hand when something happens. A phone alert only helps those who see it. PANIC ENGINE asks who gets warned,
-how fast, and whether they reach safety in time, on the road network of Amrita Vishwa Vidyapeetham, Amaravati.</p>
+<h2>The problem</h2>
+<div class="panel"><p><b>When an alert goes out, everyone is told to go to a safe place at the same moment.</b> They all choose the nearest exits and the same roads,
+so queues form and some people run out of time before the strike. <b>How should people be routed, and how much warning time is needed, so that most reach safety in time?</b></p></div>
+<p>PANIC ENGINE answers this on the road network of Amrita Vishwa Vidyapeetham, Amaravati. In the simulation everyone receives the alert on their phone;
+what differs is the route they take and how early the alert comes.</p>
 
 <h2>What you can try on this page</h2>
 <table><tr><th>Page</th><th>What it shows</th></tr>
 <tr><td><a href="live.html">Live 3D demo</a></td><td>A stored bomb-alert drill on the real campus-area road map: 250 people, a blast area, an alert area,
-safe stops, a simulated phone with siren, route and tracking, and manual control of one person.</td></tr>
+safe stops, a simulated phone with alarm, route and tracking, and manual control of one person.</td></tr>
 <tr><td><a href="safe.html">Safe-stop card</a></td><td>Tap the map or use your location to see the nearest safe stop, walking distance, directions and a printable card with a QR code.</td></tr></table>
 <p><small>These pages replay a saved run. To run new simulations, the alert planner and the SQL console, run the full Streamlit app from the repository.</small></p>
 
 <h2>How it works</h2>
-<p>Agents walk a road graph with capacity-limited edges; three routing strategies and four alert channels (phone, siren, neighbour relay, none) are compared on identical populations.
-Every run is stored in SQLite and analysed with SQL. In one saved run on the campus map, congestion-aware routing and shortest-path routing
-gave different completion rates; the numbers depend on assumed speeds, capacities and reaction delays.</p>
+<p>Agents walk a road graph with capacity-limited roads and safe stops. Three routing strategies (shortest path, congestion-aware, load-balanced) are compared on identical crowds,
+and the alert time before a bomb strike can be varied. Every run is stored in SQLite and analysed with SQL. In our runs, congestion-aware routing got more people to safety than
+shortest-path routing (for example 100% against 81% in one run on the campus map); the numbers depend on assumed speeds, capacities and reaction delays.</p>
 
 <div class="panel cite"><p><b>Inspiration.</b> We took inspiration from Carles, Chapuis, Douvinet, P&eacute;roche and Bopp (2024),
 &ldquo;An Agent-Based Model to Simulate the Effects of Tsunami Warnings on Pedestrian Evacuation: Sensitivity Analysis and Early Findings&rdquo;,
