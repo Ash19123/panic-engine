@@ -1,0 +1,339 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--fg:#f2f2f2;--mut:#9a9a9a;--line:#2e2e2e;--panel:#0b0b0b;--blue:#2d8cff;--green:#1ec850;--red:#ff3b3b;--amber:#ffb000}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;color:var(--fg);font:13px/1.35 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow:auto}
+#root{display:flex;gap:10px;height:__HEIGHT__px;min-height:520px}
+#mapcol{position:relative;flex:1 1 520px;min-width:0;border:1px solid var(--line);background:#000;overflow:hidden}
+#stage{position:absolute;inset:0}
+#side{flex:0 0 306px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0}
+.hud{position:absolute;z-index:5;background:rgba(0,0,0,.78);border:1px solid #444;padding:7px 10px}
+#top{left:10px;top:10px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.stat b{display:block;font-size:19px;color:#fff;letter-spacing:.02em}.stat span{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em}
+#banner{left:50%;transform:translateX(-50%);top:10px;text-align:center;font-weight:800;letter-spacing:.06em;min-width:250px;max-width:46%;font-size:12px;border-width:2px}
+#banner.armed{border-color:var(--amber);color:var(--amber)}
+#banner.alert{border-color:var(--red);color:#fff;background:rgba(150,0,0,.85);animation:blink 1s infinite}
+#banner.blast{border-color:#fff;color:#fff;background:rgba(60,0,0,.9)}
+#banner small{display:block;font-weight:500;letter-spacing:.02em;color:#ddd;margin-top:2px}
+@keyframes blink{50%{background:rgba(60,0,0,.85)}}
+#legend{right:10px;top:10px;font-size:9px;color:#ddd;max-width:170px;line-height:1.5;padding:5px 8px}
+#legend i{display:inline-block;width:9px;height:9px;margin-right:6px;border:1px solid #fff}
+#bar{left:10px;right:10px;bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button,select,input[type=text]{font-family:inherit}
+button,select{background:#000;color:#fff;border:1px solid #fff;padding:5px 11px;font-weight:700;font-size:11px;cursor:pointer;letter-spacing:.05em}
+button:hover:not(:disabled){background:#fff;color:#000}button.on{background:#fff;color:#000}button:disabled{opacity:.35;cursor:default}
+button.pri{background:#fff;color:#000}
+input[type=range]{accent-color:#fff;flex:1;min-width:120px}
+#attr{position:absolute;right:6px;bottom:50px;font-size:9px;color:#aaa;z-index:5}
+#err{position:absolute;left:10px;top:70px;z-index:6;color:#ff8a8a;font-size:12px;max-width:60%}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:7}
+#flash.go{animation:fl .9s ease-out}@keyframes fl{0%{opacity:.95}100%{opacity:0}}
+#toast{position:absolute;left:50%;transform:translateX(-50%);bottom:56px;z-index:8;background:#000;border:1px solid #fff;padding:6px 12px;font-size:12px;display:none}
+.card{background:var(--panel);border:1px solid var(--line);padding:8px}
+.card h4{margin:0 0 6px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);font-weight:700;display:flex;justify-content:space-between}
+/* phone */
+#phoneWrap{display:flex;justify-content:center;padding:4px 0}
+#phone{width:262px;height:520px;border-radius:38px;border:7px solid #1c1c1e;background:#050506;box-shadow:0 0 0 1px #555,0 14px 40px rgba(0,0,0,.7);position:relative;overflow:hidden}
+#phone:before{content:"";position:absolute;left:50%;top:7px;transform:translateX(-50%);width:84px;height:18px;border-radius:12px;background:#000;z-index:9}
+#pStatus{height:30px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px 3px;font-size:11px;font-weight:700;color:#fff}
+.scr{position:absolute;left:0;right:0;top:30px;bottom:0;padding:10px 11px;display:none;flex-direction:column;gap:8px}
+.scr.show{display:flex}
+#pHome{align-items:center;justify-content:center;text-align:center;color:#cfcfcf;background:radial-gradient(circle at 50% 30%,#1b1b1f,#050506)}
+#pHome .big{font-size:40px;font-weight:200;color:#fff}
+#pHome .chip{border:1px solid #444;border-radius:20px;padding:5px 12px;font-size:11px}
+#pAlert{background:#a30000;color:#fff;align-items:center;justify-content:center;text-align:center;animation:alarm .55s infinite}
+@keyframes alarm{0%,100%{background:#b00000}50%{background:#3b0000}}
+#pAlert .h{font-size:13px;font-weight:900;letter-spacing:.2em}
+#pAlert .t{font-size:20px;font-weight:900;line-height:1.1}
+#pAlert .m{font-size:12px;max-width:200px}
+#pAlert .c{font-size:26px;font-weight:900;font-variant-numeric:tabular-nums;border:2px solid #fff;padding:4px 14px}
+#pAlert button{background:#fff;color:#000;font-size:13px;padding:10px 18px;border:0;border-radius:24px}
+#pNav{padding:8px 10px;gap:6px}
+#nStop{font-size:10px;letter-spacing:.14em;color:#8ab4ff;font-weight:700}#nName{font-size:14px;font-weight:800;line-height:1.15}
+.nums{display:flex;gap:8px}.nums div{flex:1;background:#14161a;border:1px solid #2b2f36;border-radius:10px;padding:6px 8px}
+.nums b{display:block;font-size:16px;font-variant-numeric:tabular-nums}.nums span{font-size:9px;color:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+#nMap{width:100%;height:178px;border-radius:12px;background:#0c0e12;border:1px solid #2b2f36;display:block}
+#nMsg{font-size:11px;min-height:26px}
+#nChip{align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:.1em;border-radius:12px;padding:3px 9px;border:1px solid #fff}
+#nBar{height:6px;border-radius:4px;background:#22262c;overflow:hidden}#nBar i{display:block;height:100%;width:0;background:var(--blue)}
+#dpad{display:none;grid-template-columns:repeat(3,38px);grid-template-rows:repeat(2,34px);gap:4px;justify-content:center}
+#dpad button{padding:0;border-radius:8px;font-size:15px}
+/* roster */
+#roster{display:flex;flex-direction:column;gap:2px;max-height:128px;overflow-y:auto}
+.prow{display:grid;grid-template-columns:12px 1fr auto;gap:6px;align-items:center;padding:3px 5px;border:1px solid transparent;cursor:pointer}
+.prow.sel{border-color:var(--blue);background:#0b1a2e}
+.prow .d{width:10px;height:10px;border-radius:50%;border:1px solid #fff}
+.prow input{background:transparent;border:0;border-bottom:1px dashed #444;color:#fff;font-size:12px;padding:1px 2px;width:100%}
+.prow .s{font-size:10px;color:var(--mut);text-align:right;white-space:nowrap}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px;font-size:11px}
+.row label{display:flex;gap:4px;align-items:center;color:#ccc}
+#ctl small{color:var(--mut);display:block;margin-top:4px;line-height:1.35}
+@media(max-width:900px){#root{flex-direction:column;height:auto}#mapcol{height:560px;flex:none}#side{flex:none;overflow:visible}}
+</style></head><body><div id="root">
+<div id="mapcol">
+ <div id="stage"></div>
+ <div class="hud" id="top">
+  <div class="stat"><b id="sT">0 s</b><span>Clock</span></div>
+  <div class="stat"><b id="sE">0</b><span>Safe</span></div>
+  <div class="stat"><b id="sM">0</b><span>Moving</span></div>
+  <div class="stat"><b id="sQ">0</b><span>Waiting / queued</span></div>
+  <div class="stat"><b id="sU">0</b><span id="sUl">Unable</span></div>
+ </div>
+ <div class="hud" id="banner" style="display:none"></div>
+ <div class="hud" id="legend"><b>LEGEND</b><br>
+  <i style="background:#009624"></i>Safe stop (hypothetical)<br><i style="background:#d62020"></i>Blast / danger area<br>
+  <i style="background:#ffb000"></i>Alert area<br><i style="background:#1ec850"></i>Moving (arrow = direction)<br>
+  <i style="background:#ffaa00"></i>Queued &nbsp;<i style="background:#8c8c8c"></i>Not departed<br>
+  <i style="background:#2d8cff"></i>Tracked person / route<br><i style="background:#fff"></i>Closed road</div>
+ <div class="hud" id="bar">
+  <button id="bPlay" class="pri">&#9654; PLAY</button><button id="bReset">RESET</button><button id="bBack">&#9664; STEP</button><button id="bFwd">STEP &#9654;</button>
+  <label>Speed <select id="sp"><option value="15">15&times;</option><option value="30">30&times;</option><option value="60" selected>60&times;</option><option value="120">120&times;</option><option value="240">240&times;</option><option value="480">480&times;</option></select></label>
+  <input type="range" id="tm" min="0" max="1000" value="0">
+  <label>Map <select id="bm"><option value="dark">OSM (dark)</option><option value="light">OSM (light)</option><option value="none">None</option></select></label>
+  <button id="bSnd" title="Alarm sound">&#128266; SOUND</button>
+ </div>
+ <div id="attr"></div><div id="err"></div><div id="flash"></div><div id="toast"></div>
+</div>
+<div id="side">
+ <div class="card"><h4><span>Person's phone</span><span id="phoneWho" style="color:#fff;letter-spacing:0;text-transform:none"></span></h4>
+ <div id="phoneWrap"><div id="phone">
+  <div id="pStatus"><span id="pClock">09:00</span><span id="pName"></span><span>5G &#9646;&#9646;&#9646;</span></div>
+  <div class="scr show" id="pHome"><div class="big" id="hClock">09:00</div><div id="hMsg">No active alerts</div><div class="chip" id="hChip">Emergency alerts: ON</div></div>
+  <div class="scr" id="pAlert"><div class="h">&#9888; EMERGENCY ALERT</div><div class="t" id="aTitle">BLAST HAZARD NEAR YOU</div>
+   <div class="m">You are inside the affected area. Reach the nearest safe stop <b>now</b>.</div><div class="c" id="aCount">--:--</div>
+   <button id="aView">VIEW SAFE ROUTE</button></div>
+  <div class="scr" id="pNav"><div id="nStop">NEAREST SAFE STOP</div><div id="nName">-</div>
+   <div class="nums"><div><b id="nDist">-</b><span>Distance</span></div><div><b id="nEta">-</b><span>Walk time</span></div><div><b id="nCd">-</b><span id="nCdl">Blast in</span></div></div>
+   <canvas id="nMap" width="480" height="356"></canvas><div id="nBar"><i></i></div>
+   <div id="nChip">TRACKING</div><div id="nMsg"></div>
+   <div id="dpad"><span></span><button data-d="up">&#9650;</button><span></span><button data-d="left">&#9664;</button><button data-d="down">&#9660;</button><button data-d="right">&#9654;</button></div></div>
+ </div></div></div>
+ <div class="card"><h4><span>Tracked people</span></h4>
+  <div id="roster"></div>
+  <div id="ctl"><div class="row"><label><input type="checkbox" id="cPath" checked>Show route on map</label><label><input type="checkbox" id="cFollow">Follow camera</label></div>
+   <div class="row"><label>Guide to <select id="cStop"></select></label></div>
+   <div class="row"><button id="bCtl">TAKE CONTROL</button><button id="bAuto" disabled>AUTO-GUIDE</button></div>
+   </div>
+ </div>
+</div></div>
+<script>__DECK__</script>
+<script>__CORE__</script>
+<script>
+"use strict";
+const D=__DATA__;
+const $=id=>document.getElementById(id);
+const T=D.times,last=T.length-1,tmaxData=T[last]||1,n=D.n;
+const G=D.graph,NN=G.lon.length,EN=G.eu.length;
+const cosLat=Math.cos(D.view.lat*Math.PI/180),MD=111320,WALK=1.4;
+D.closures.sort((a,b)=>a[1]-b[1]);
+const COL={0:[140,140,140,235],1:[30,200,80,255],2:[255,170,0,255],4:[214,32,32,255]};
+const SCOL={0:'#8c8c8c',1:'#1ec850',2:'#ffaa00',3:'#1ec850',4:'#ff3b3b'};
+const core=makeCore(D);const{dM,nearestNode,closedAt,safeOpen,route,bestNeighbor}=core;
+/* ---------- time / data ---------- */
+let t=0,playing=false,lastTs=null,speed=60,basemap=D.synthetic?'none':'dark',roadFrame=-1,soundOn=true,lastT=0;
+const ratio=new Float32Array(D.roads.length),heading=new Float32Array(n);
+let tEnd=tmaxData;
+function locate(x){if(x>=tmaxData)return[last,0];let lo=0,hi=last;while(hi-lo>1){const m=(lo+hi)>>1;if(T[m]<=x)lo=m;else hi=m;}return[lo,(x-T[lo])/(T[hi]-T[lo])];}
+function posOf(k,i,j,a){let lo=D.lon[i][k],la=D.lat[i][k],h=heading[k];const s=D.states[i][k];
+ if(s===1&&j!==i){const s2=D.states[j][k];if(s2!==0){const lo2=D.lon[j][k],la2=D.lat[j][k],dx=(lo2-lo)*cosLat,dy=la2-la;if(dx||dy)h=heading[k]=Math.atan2(dx,dy)*180/Math.PI;lo+=(lo2-lo)*a;la+=(la2-la)*a;}}
+ return[lo,la,s,h];}
+/* ---------- tracked people + manual avatars ---------- */
+let names={};try{names=JSON.parse(localStorage.getItem('pe_names')||'{}');}catch(e){}
+const P=D.people.map((p,i)=>({k:p.k,name:names[p.k]||p.name,alert:p.alert,dep:p.dep,ch:p.ch,manual:null,dist:null,stop:'',trail:[],shown:false,startDist:null}));
+let sel=0,guide=null,guideAt=0,pref=-1,dirHeld=null,dirSticky=null,follow=false;
+const ME='w'+Math.random().toString(36).slice(2,8);let owner=null,connected=false;
+const isOwner=()=>owner===ME||!connected;
+function bearingFor(d){return({up:0,right:90,down:180,left:-90})[d]+(curView.bearing||0);}
+let curView={bearing:D.view.bearing,zoom:D.view.zoom,pitch:D.view.pitch,longitude:D.view.lon,latitude:D.view.lat};
+function personAt(pi,x){const p=P[pi];if(p.manual){const m=p.manual;return{lon:m.lon,lat:m.lat,s:m.status==='safe'?3:m.status==='caught'?4:1,h:m.heading,manual:true};}
+ const[i,a]=locate(x),j=Math.min(i+1,last),r=posOf(p.k,i,j,a);return{lon:r[0],lat:r[1],s:r[2],h:r[3]};}
+function stepManual(m,dt,x){core.stepManual(m,dt,x,{dir:()=>dirSticky||dirHeld,clear:()=>{dirSticky=null;},bearing:bearingFor,pref});}
+function turnAround(m,brg){if(m.to<0)return;const h=m.heading;const df=Math.abs(((h-brg+540)%360)-180);if(df>120){const a=m.from;m.from=m.to;m.to=a;m.prog=m.len-m.prog;m.heading=(h+180)%360;}}
+function startControl(pi){const p=P[pi],cur=personAt(pi,t),nd=nearestNode(cur.lon,cur.lat);
+ p.manual={node:nd,from:nd,to:-1,len:1,prog:0,lon:G.lon[nd],lat:G.lat[nd],heading:cur.h||0,trail:[[cur.lon,cur.lat],[G.lon[nd],G.lat[nd]]],status:'idle',auto:false,stop:''};
+ tEnd=tmaxData+1800;toast('Manual control ON: press PLAY, then use arrow keys / WASD or the D-pad');}
+function stopControl(pi){P[pi].manual=null;tEnd=P.some(p=>p.manual)?tmaxData+1800:tmaxData;t=Math.min(t,tEnd);}
+/* ---------- bombs: banner, flash, siren ---------- */
+let flashAt={},audio=null;
+function fmtMS(s){s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function clock(x){const s=9*3600+Math.round(x);return String(Math.floor(s/3600)%24).padStart(2,'0')+':'+String(Math.floor(s/60)%60).padStart(2,'0');}
+function toast(msg){const e=$('toast');e.textContent=msg;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',3500);}
+function siren(ms){if(soundOn){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume&&audio.resume();const o=audio.createOscillator(),g=audio.createGain();
+ o.type='sawtooth';o.connect(g);g.connect(audio.destination);g.gain.value=0.07;const t0=audio.currentTime;for(let i=0;i<ms/450;i++)o.frequency.setValueAtTime(i%2?960:600,t0+i*0.45);o.start();o.stop(t0+ms/1000);}catch(e){}}
+ try{navigator.vibrate&&navigator.vibrate([400,150,400,150,400]);}catch(e){}}
+function updateBanner(x){const b=$('banner');if(!D.bombs.length){b.style.display='none';return;}b.style.display='block';
+ const up=D.bombs.filter(z=>x<z.strike).sort((a,c)=>a.strike-c.strike)[0],al=Math.min(...D.bombs.map(z=>z.alert));
+ if(!up){b.className='hud blast';b.innerHTML='&#128165; BLAST OCCURRED<small>Roads inside the blast area are closed &middot; people still inside are marked caught</small>';}
+ else if(x<al){b.className='hud armed';b.innerHTML='THREAT ARMED &middot; alert in '+fmtMS(al-x)+'<small>Strike scheduled at '+clock(up.strike)+' &middot; '+up.name+'</small>';}
+ else{b.className='hud alert';b.innerHTML='&#9888; ALERT ISSUED &middot; BLAST IN '+fmtMS(up.strike-x)+'<small>Phones in the alert area are warning people to reach a safe stop</small>';}}
+function checkStrikes(prev,x){if(!playing)return;D.bombs.forEach((b,i)=>{if(prev<b.strike&&x>=b.strike){flashAt[i]=performance.now();const f=$('flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');}});}
+/* ---------- phone ---------- */
+let alertTimer=null;
+function show(id){['pHome','pAlert','pNav'].forEach(k=>$(k).classList.toggle('show',k===id));}
+function personStatus(pi,x){const p=P[pi],c=personAt(pi,x);
+ if(p.manual){const m=p.manual.status;if(m==='safe')return['SAFE','#1ec850'];if(m==='caught')return['CAUGHT','#ff3b3b'];return['MANUAL','#2d8cff'];}
+ return[['WAITING','#8c8c8c'],['WALKING','#1ec850'],['QUEUED','#ffaa00'],['SAFE','#1ec850'],['CAUGHT','#ff3b3b']][c.s];}
+function refreshGuide(force){if(!P.length)return;const now=performance.now();if(!force&&now-guideAt<350)return;guideAt=now;
+ const c=personAt(sel,t),nd=nearestNode(c.lon,c.lat),r=route(nd,t,pref);
+ if(!r){guide=null;return;}
+ const first=[G.lon[r.nodes[0]],G.lat[r.nodes[0]]],off=dM(c.lon,c.lat,first[0],first[1]);
+ guide={safe:r.safe,dist:r.dist+off,ll:[[c.lon,c.lat]].concat(r.nodes.map(v=>[G.lon[v],G.lat[v]]))};}
+function updatePhone(x){if(!P.length)return;const p=P[sel],c=personAt(sel,x),st=personStatus(sel,x);
+ $('pClock').textContent=clock(x);$('hClock').textContent=clock(x);$('pName').textContent=p.name;$('phoneWho').textContent=p.name;
+ const phoneUser=!p.ch||p.ch==='PHONE'||!!p.manual;
+ if(!phoneUser){const how=p.ch==='SIREN'?'a siren':p.ch==='NEIGHBOUR'?'a neighbour':'';
+  $('hMsg').textContent=p.ch==='NONE'?'No phone alert reached this person. Nobody warned them.':(x>=p.alert?'No phone with them. Warned by '+how+' at '+clock(p.alert)+'.':'No phone with them. No alert yet.');
+  show('pHome');return;}
+ const alerted=p.alert!==null&&x>=p.alert;
+ if(p.alert===null){$('hMsg').textContent='Not in an alert area';}
+ else if(!alerted){$('hMsg').textContent='No active alerts';}
+ if(alerted&&!p.shown){p.shown=true;if(playing&&x-p.alert<25&&sel===P.indexOf(p)){show('pAlert');siren(7000);clearTimeout(alertTimer);alertTimer=setTimeout(()=>{if($('pAlert').classList.contains('show'))show('pNav');},7000);}else show('pNav');}
+ if(!alerted&&$('pNav').classList.contains('show')&&!p.manual)show('pHome');
+ const nextStrike=D.bombs.filter(b=>x<b.strike).map(b=>b.strike).sort((a,b)=>a-b)[0];
+ $('aCount').textContent=nextStrike!==undefined?fmtMS(nextStrike-x):'BLAST';$('aTitle').textContent=nextStrike!==undefined?'BLAST HAZARD NEAR YOU':'BLAST HAS OCCURRED';
+ if(!$('pNav').classList.contains('show'))return;
+ refreshGuide(false);
+ const stopName=guide?D.safe[guide.safe].name:(st[0]==='SAFE'&&p.manual?p.manual.stop:'-');
+ $('nName').textContent=st[0]==='SAFE'?(p.manual&&p.manual.stop?p.manual.stop:stopName):(guide?stopName:'No open route');
+ if(guide&&p.startDist===null)p.startDist=guide.dist;
+ $('nDist').textContent=st[0]==='SAFE'?'0 m':guide?(guide.dist>=1000?(guide.dist/1000).toFixed(2)+' km':Math.round(guide.dist)+' m'):'-';
+ $('nEta').textContent=st[0]==='SAFE'?'-':guide?Math.max(1,Math.round(guide.dist/WALK/60))+' min':'-';
+ $('nCd').textContent=nextStrike!==undefined?fmtMS(nextStrike-x):'-';$('nCdl').textContent=nextStrike!==undefined?'Blast in':'Blast';
+ const chip=$('nChip');chip.textContent=st[0];chip.style.color=st[1];chip.style.borderColor=st[1];
+ const msg=st[0]==='SAFE'?'You have reached a safe stop. Stay here until the all-clear.':st[0]==='CAUGHT'?'The blast area reached this position.':
+  !guide?'No open route to a safe stop. Find shelter and call for help.':p.manual?'Walking manually - follow the blue route (or use AUTO-GUIDE).':
+  st[0]==='WAITING'?'Get ready to move. Follow the blue route to the nearest safe stop.':'Follow the blue route to the nearest safe stop.';
+ $('nMsg').textContent=msg;
+ const prog=p.startDist?Math.max(0,Math.min(1,1-(guide?guide.dist:0)/p.startDist)):0;$('nBar').firstElementChild.style.width=(st[0]==='SAFE'?100:prog*100)+'%';
+ $('dpad').style.display=p.manual?'grid':'none';drawMini(c,x);}
+function drawMini(c,x){const cv=$('nMap'),ctx=cv.getContext('2d'),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+ let pts=[[c.lon,c.lat]];if(guide)pts=pts.concat(guide.ll);const b=D.bombs.filter(z=>dM(c.lon,c.lat,z.lon,z.lat)<z.alertR*1.3);
+ let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;for(const q of pts){minx=Math.min(minx,q[0]);maxx=Math.max(maxx,q[0]);miny=Math.min(miny,q[1]);maxy=Math.max(maxy,q[1]);}
+ const cx=(minx+maxx)/2,cy=(miny+maxy)/2;let spanM=Math.max((maxx-minx)*cosLat*MD,(maxy-miny)*MD,260)*1.45;
+ const sc=Math.min(W,H)/spanM;const X=(lo)=>W/2+(lo-cx)*cosLat*MD*sc,Y=(la)=>H/2-(la-cy)*MD*sc;
+ const closed=closedAt(x);ctx.lineCap='round';ctx.lineWidth=3;
+ for(let e=0;e<EN;e++){const u=G.eu[e],v=G.ev[e];if(u>v)continue;const x1=X(G.lon[u]),y1=Y(G.lat[u]),x2=X(G.lon[v]),y2=Y(G.lat[v]);
+  if((x1<-20&&x2<-20)||(x1>W+20&&x2>W+20)||(y1<-20&&y2<-20)||(y1>H+20&&y2>H+20))continue;
+  const cl=closed.has(G.er[e]);ctx.strokeStyle=cl?'#ff5a5a':'#4a505a';ctx.setLineDash(cl?[8,6]:[]);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+ ctx.setLineDash([]);
+ for(const z of D.bombs){const r1=z.blast*sc,r2=z.alertR*sc,zx=X(z.lon),zy=Y(z.lat);ctx.beginPath();ctx.arc(zx,zy,r2,0,7);ctx.strokeStyle='rgba(255,176,0,.8)';ctx.lineWidth=3;ctx.setLineDash([10,8]);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(zx,zy,r1,0,7);ctx.fillStyle=x>=z.strike?'rgba(200,20,20,.55)':'rgba(255,40,40,.28)';ctx.fill();}
+ if(guide){ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle='#fff';ctx.lineWidth=11;ctx.beginPath();guide.ll.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();
+  ctx.strokeStyle='#2d8cff';ctx.lineWidth=7;ctx.beginPath();guide.ll.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();}
+ const tr=P[sel].manual?P[sel].manual.trail:P[sel].trail;if(tr.length>1){ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=3;ctx.setLineDash([2,6]);ctx.beginPath();tr.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();ctx.setLineDash([]);}
+ D.safe.forEach((s,i)=>{const sx=X(s.lon),sy=Y(s.lat);if(sx<-30||sx>W+30||sy<-30||sy>H+30)return;const ok=safeOpen(i,x);ctx.fillStyle=ok?'#009624':'#555';ctx.fillRect(sx-17,sy-17,34,34);ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.strokeRect(sx-17,sy-17,34,34);
+  ctx.fillStyle='#fff';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('S',sx,sy+1);
+  if(guide&&guide.safe===i){ctx.font='bold 20px sans-serif';ctx.fillText(s.name.length>22?s.name.slice(0,21)+'…':s.name,sx,sy-30);}});
+ const px=X(c.lon),py=Y(c.lat),h=(c.h||0)*Math.PI/180;ctx.beginPath();ctx.arc(px,py,17,0,7);ctx.fillStyle='rgba(45,140,255,.28)';ctx.fill();
+ ctx.save();ctx.translate(px,py);ctx.rotate(h);ctx.beginPath();ctx.moveTo(0,-15);ctx.lineTo(11,12);ctx.lineTo(0,6);ctx.lineTo(-11,12);ctx.closePath();ctx.fillStyle='#2d8cff';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();ctx.restore();}
+/* ---------- roster ---------- */
+function buildRoster(){const R=$('roster');R.innerHTML='';P.forEach((p,i)=>{const r=document.createElement('div');r.className='prow'+(i===sel?' sel':'');r.dataset.i=i;
+ r.innerHTML='<span class="d"></span><input type="text" maxlength="24"><span class="s">-</span>';const inp=r.querySelector('input');inp.value=p.name;
+ inp.onclick=e=>e.stopPropagation();inp.onchange=()=>{p.name=inp.value.trim()||p.name;names[p.k]=p.name;claim();try{localStorage.setItem('pe_names',JSON.stringify(names));}catch(e){}updatePhone(t);};
+ r.onclick=()=>selectPerson(i);R.appendChild(r);});
+ const cs=$('cStop');cs.innerHTML='<option value="-1">Nearest safe stop (auto)</option>'+D.safe.map((s,i)=>'<option value="'+i+'">'+s.name+'</option>').join('');}
+function selectPerson(i,fromSync){sel=i;pref=-1;$('cStop').value='-1';guide=null;clearTimeout(alertTimer);[...$('roster').children].forEach((r,k)=>r.classList.toggle('sel',k===i));
+ const p=P[i];p.shown=false;if(p.alert!==null&&t>=p.alert)show('pNav');else show('pHome');updateCtl();refreshGuide(true);updatePhone(t);if(!fromSync)claim();}
+function updateCtl(){const m=P[sel]&&P[sel].manual;$('bCtl').textContent=m?'RELEASE CONTROL':'TAKE CONTROL';$('bCtl').classList.toggle('on',!!m);$('bAuto').disabled=!m;$('bAuto').classList.toggle('on',!!(m&&m.auto));}
+let rosterAt=0;
+function updateRoster(x){const now=performance.now();if(now-rosterAt<900)return;rosterAt=now;
+ [...$('roster').children].forEach((r,i)=>{const p=P[i],st=personStatus(i,x),c=personAt(i,x);const d=r.querySelector('.d');d.style.background=st[1];
+  let txt=st[0];if(st[0]!=='SAFE'&&st[0]!=='CAUGHT'){const q=route(nearestNode(c.lon,c.lat),x,-1);txt+=q?' · '+(q.dist>=1000?(q.dist/1000).toFixed(1)+' km':Math.round(q.dist)+' m'):' · no route';}
+  if(p.ch&&p.ch!=='PHONE')txt+=' · '+(p.ch==='NONE'?'unwarned':p.ch.toLowerCase());
+  r.querySelector('.s').textContent=txt;});}
+/* ---------- layers ---------- */
+const cv0=document.createElement('canvas');cv0.width=cv0.height=64;const c0=cv0.getContext('2d');c0.fillStyle='#fff';c0.beginPath();c0.moveTo(32,4);c0.lineTo(56,58);c0.lineTo(32,46);c0.lineTo(8,58);c0.closePath();c0.fill();
+const ATLAS=cv0.toDataURL(),MAP={tri:{x:0,y:0,width:64,height:64,mask:true}};
+const view=D.view;let deckgl;
+try{deckgl=new deck.Deck({parent:$('stage'),initialViewState:{longitude:view.lon,latitude:view.lat,zoom:view.zoom,pitch:view.pitch,bearing:view.bearing,maxPitch:80},
+ controller:true,views:new deck.MapView({id:'map'}),parameters:{clearColor:[0,0,0,1]},onViewStateChange:({viewState})=>{curView=viewState;},
+ getTooltip:({object})=>object&&object.tip?{text:object.tip,style:{backgroundColor:'#000',color:'#fff',border:'1px solid #666'}}:null,
+ onError:e=>{$('err').textContent='Render error: '+e.message;}});}catch(e){$('err').textContent='3D engine failed to start: '+e.message;}
+function roadsFor(i){if(i===roadFrame)return;roadFrame=i;ratio.fill(0);for(const o of D.occ[i])ratio[o[0]]=o[1];}
+function layers(x){const[i,a]=locate(x),j=Math.min(i+1,last);roadsFor(i);const cl=closedAt(x),L=[],now=performance.now();
+ if(basemap!=='none'){const dark=basemap==='dark';L.push(new deck.TileLayer({id:'base-'+basemap,data:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',minZoom:0,maxZoom:19,tileSize:256,
+  renderSubLayers:p=>{const{west,south,east,north}=p.tile.bbox;return new deck.BitmapLayer(p,{data:null,image:p.data,bounds:[west,south,east,north],desaturate:dark?0.85:0,tintColor:dark?[58,62,70]:[255,255,255]});}}));}
+ L.push(new deck.PathLayer({id:'roads',data:D.roads,getPath:d=>d.p,widthUnits:'meters',widthMinPixels:1.5,capRounded:true,jointRounded:true,getWidth:d=>d.w,
+  getColor:(d,{index})=>cl.has(index)?[255,255,255]:[Math.round(150+67*Math.min(1,ratio[index])),Math.round(154-71*Math.min(1,ratio[index])),Math.round(160-76*Math.min(1,ratio[index]))],updateTriggers:{getColor:[i,cl.size]}}));
+ if(D.buildings.length)L.push(new deck.PolygonLayer({id:'bld',data:D.buildings,getPolygon:d=>d.p,extruded:true,getElevation:d=>d.h,getFillColor:d=>d.c,material:{ambient:.55,diffuse:.6,shininess:20}}));
+ if(D.zones.length){L.push(new deck.PolygonLayer({id:'zr',data:D.zones,getPolygon:d=>d.pr,extruded:true,getElevation:12,getFillColor:[150,10,10,255]}),
+  new deck.PolygonLayer({id:'za',data:D.zones,getPolygon:d=>d.p,extruded:true,getElevation:6,getFillColor:[214,32,32,215]}),
+  new deck.IconLayer({id:'zi',data:D.zones,getPosition:d=>[d.lon,d.lat,48],getIcon:()=>({url:D.icons.danger,width:128,height:128,anchorY:128}),getSize:30,sizeUnits:'pixels'}));}
+ /* bombs: alert ring, pulsing threat disc, then burnt arena + shockwave */
+ const pulse=0.5+0.5*Math.sin(now/260);
+ D.bombs.forEach((b,bi)=>{const struck=x>=b.strike;
+  L.push(new deck.ScatterplotLayer({id:'ba'+bi,data:[b],getPosition:d=>[d.lon,d.lat,3],getRadius:b.alertR,stroked:true,filled:true,getFillColor:[255,176,0,x>=b.alert?22:10],getLineColor:[255,176,0,x>=b.alert?255:140],lineWidthMinPixels:2,getLineWidth:5,updateTriggers:{getFillColor:[x>=b.alert],getLineColor:[x>=b.alert]}}));
+  if(!struck)L.push(new deck.ScatterplotLayer({id:'bt'+bi,data:[b],getPosition:d=>[d.lon,d.lat,4],getRadius:b.blast,stroked:true,filled:true,getFillColor:[255,30,30,Math.round(40+90*pulse)],getLineColor:[255,60,60,255],lineWidthMinPixels:2,getLineWidth:4,updateTriggers:{getFillColor:[Math.round(pulse*20)]}}));
+  else L.push(new deck.PolygonLayer({id:'bx'+bi,data:[b],getPolygon:d=>d.pr,extruded:true,getElevation:10,getFillColor:[120,8,8,255]}),new deck.PolygonLayer({id:'by'+bi,data:[b],getPolygon:d=>d.p,extruded:true,getElevation:5,getFillColor:[214,32,32,235]}));
+  const f=flashAt[bi];if(f&&now-f<2600){const pr=(now-f)/2600;L.push(new deck.ScatterplotLayer({id:'bw'+bi,data:[b],getPosition:d=>[d.lon,d.lat,6],getRadius:b.blast*(0.4+2.2*pr),stroked:true,filled:false,getLineColor:[255,230,160,Math.round(255*(1-pr))],lineWidthMinPixels:3,getLineWidth:10,updateTriggers:{getRadius:[Math.round(pr*60)],getLineColor:[Math.round(pr*60)]}}));}
+  L.push(new deck.IconLayer({id:'bi'+bi,data:[b],getPosition:d=>[d.lon,d.lat,70],getIcon:()=>({url:D.icons.danger,width:128,height:128,anchorY:128}),getSize:34,sizeUnits:'pixels',pickable:true,getTooltip:null}));});
+ if(D.safe.length){const blocks=[];D.safe.forEach((s,k)=>{const c=safeOpen(k,x)?[0,150,36,255]:[120,130,120,255];blocks.push({p:s.p,h:30,c},{p:s.p2,h:44,c});});
+  L.push(new deck.PolygonLayer({id:'sb',data:blocks,getPolygon:d=>d.p,extruded:true,getElevation:d=>d.h,getFillColor:d=>d.c,material:{ambient:.6,diffuse:.7},updateTriggers:{getFillColor:[D.safe.map((s,k)=>safeOpen(k,x)).join()]}}),
+  new deck.IconLayer({id:'si',data:D.safe,getPosition:d=>[d.lon,d.lat,62],getIcon:()=>({url:D.icons.exit,width:128,height:128,anchorY:128}),getSize:34,sizeUnits:'pixels',pickable:true}));}
+ L.push(new deck.ScatterplotLayer({id:'or',data:D.origins,getPosition:d=>[d.lon,d.lat,2],getRadius:16,radiusMinPixels:5,stroked:true,filled:false,getLineColor:[255,255,255],lineWidthMinPixels:2,pickable:true}));
+ if(D.focus)L.push(new deck.ScatterplotLayer({id:'fc',data:[D.focus],getPosition:d=>[d.lon,d.lat,4],getRadius:22,radiusMinPixels:9,getFillColor:[8,105,255,230],stroked:true,getLineColor:[255,255,255],lineWidthMinPixels:2,pickable:true}));
+ const mv=[],idle=[];for(let k=0;k<n;k++){const s=D.states[i][k];if(s===3)continue;const r=posOf(k,i,j,a);const o={p:[r[0],r[1],3],c:COL[s],ang:-r[3],tip:'person '+k+': '+['waiting','moving','queued','','unable'][s]};(s===1?mv:idle).push(o);}
+ L.push(new deck.ScatterplotLayer({id:'idle',data:idle,getPosition:d=>d.p,getFillColor:d=>d.c,getRadius:8,radiusMinPixels:5,stroked:true,getLineColor:[255,255,255],lineWidthMinPixels:1,pickable:true}),
+  new deck.IconLayer({id:'mv',data:mv,iconAtlas:ATLAS,iconMapping:MAP,getIcon:()=>'tri',getPosition:d=>d.p,getColor:d=>d.c,getAngle:d=>d.ang,billboard:false,getSize:26,sizeUnits:'meters',sizeMinPixels:12,pickable:true}));
+ /* tracked people: names, selected route + trail */
+ if(P.length){if($('cPath').checked&&guide){L.push(new deck.PathLayer({id:'gp',data:[{p:guide.ll.map(q=>[q[0],q[1],8])}],getPath:d=>d.p,getColor:[45,140,255],widthUnits:'meters',getWidth:14,widthMinPixels:5,capRounded:true,jointRounded:true}));}
+  const tr=P[sel].manual?P[sel].manual.trail:P[sel].trail;if($('cPath').checked&&tr.length>1)L.push(new deck.PathLayer({id:'tp',data:[{p:tr.map(q=>[q[0],q[1],7])}],getPath:d=>d.p,getColor:[255,255,255,170],widthUnits:'meters',getWidth:6,widthMinPixels:2}));
+  const rows=P.map((p,pi)=>{const c=personAt(pi,x),st=personStatus(pi,x);return{p:[c.lon,c.lat,12],t:p.name,sel:pi===sel,col:st[1],tip:p.name+' - '+st[0]};});
+  L.push(new deck.ScatterplotLayer({id:'tk',data:rows,getPosition:d=>d.p,getRadius:d=>d.sel?24:15,radiusMinPixels:7,getFillColor:d=>d.sel?[45,140,255,255]:[255,255,255,230],stroked:true,getLineColor:d=>d.sel?[255,255,255]:[45,140,255],lineWidthMinPixels:2,pickable:true,updateTriggers:{getRadius:[sel],getFillColor:[sel],getLineColor:[sel]}}),
+   new deck.TextLayer({id:'tn',data:rows,getPosition:d=>d.p,getText:d=>d.t,getSize:d=>d.sel?15:12,getColor:[255,255,255,255],getPixelOffset:[0,-22],background:true,getBackgroundColor:[0,0,0,200],backgroundPadding:[4,2],fontFamily:'Arial',updateTriggers:{getSize:[sel]}}));}
+ return L;}
+/* ---------- loop / controls ---------- */
+function hud(x){const[i]=locate(x),s=D.stats[i];$('sT').textContent=Math.round(x).toLocaleString()+' s';$('sE').textContent=s[3]+' / '+D.total;$('sM').textContent=s[1];$('sQ').textContent=s[0]+s[2];$('sU').textContent=s[4];
+ $('sUl').textContent=D.bombs.length?'Caught / unable':'Unable';$('tm').value=Math.round(1000*Math.min(x,tmaxData)/tmaxData);$('attr').textContent=basemap==='none'?'':D.attribution;updateBanner(x);}
+let phoneAt=0;
+function render(){if(!deckgl)return;deckgl.setProps({layers:layers(t)});hud(t);const now=performance.now();updateRoster(t);if(now-phoneAt>110){phoneAt=now;updatePhone(t);}}
+function followCam(){if(!follow||!P.length||!deckgl)return;const c=personAt(sel,t);deckgl.setProps({initialViewState:Object.assign({},curView,{longitude:c.lon,latitude:c.lat,transitionDuration:350,maxPitch:80})});}
+setInterval(followCam,400);
+function tick(ts){let dt=0;if(playing){if(lastTs!==null){dt=(ts-lastTs)/1000*speed;const prev=t;t=Math.min(tEnd,t+dt);if(t<=prev&&t>=tEnd){playing=false;setPlay();}checkStrikes(prev,t);
+  P.forEach((p,pi)=>{if(p.manual){if(isOwner())stepManual(p.manual,t-prev,t);}else if(p.trail.length===0||true){/* trail of simulated person (sampled) */const c=personAt(pi,t);const q=p.trail[p.trail.length-1];if(!q||dM(q[0],q[1],c.lon,c.lat)>12)p.trail.push([c.lon,c.lat]);}});}
+  lastTs=ts;}else lastTs=null;
+ if(t<lastT-1e-6){P.forEach(p=>{p.trail=[];p.shown=false;p.startDist=null;if(p.manual){p.manual=null;}});tEnd=tmaxData;updateCtl();flashAt={};show('pHome');}lastT=t;
+ render();requestAnimationFrame(tick);}
+function setPlay(){$('bPlay').innerHTML=playing?'&#10074;&#10074; PAUSE':'&#9654; PLAY';$('bPlay').classList.toggle('on',playing);}
+$('bPlay').onclick=()=>{try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume&&audio.resume();}catch(e){}if(t>=tEnd)t=0;playing=!playing;setPlay();claim();};
+$('bReset').onclick=()=>{t=0;playing=false;setPlay();claim();};
+$('bBack').onclick=()=>{playing=false;setPlay();const[i,a]=locate(t);t=T[a>0.02?i:Math.max(0,i-1)];claim();};
+$('bFwd').onclick=()=>{playing=false;setPlay();const[i]=locate(t);t=T[Math.min(last,i+1)];claim();};
+$('sp').onchange=e=>{speed=+e.target.value;claim();};$('bm').onchange=e=>{basemap=e.target.value;};
+$('tm').oninput=e=>{t=tmaxData*(+e.target.value)/1000;playing=false;setPlay();claim();};
+$('bSnd').onclick=()=>{soundOn=!soundOn;$('bSnd').classList.toggle('on',!soundOn);$('bSnd').innerHTML=soundOn?'&#128266; SOUND':'&#128263; MUTED';};
+$('aView').onclick=()=>{clearTimeout(alertTimer);show('pNav');};
+$('cStop').onchange=e=>{pref=+e.target.value;P[sel].startDist=null;refreshGuide(true);};
+$('cFollow').onchange=e=>{follow=e.target.checked;};
+$('bCtl').onclick=()=>{if(!P.length)return;if(P[sel].manual)stopControl(sel);else{startControl(sel);P[sel].shown=true;show('pNav');}updateCtl();refreshGuide(true);claim();};
+$('bAuto').onclick=()=>{const m=P[sel].manual;if(m){m.auto=!m.auto;updateCtl();claim();}};
+document.querySelectorAll('#dpad button').forEach(b=>{const d=b.dataset.d;const down=e=>{e.preventDefault();dirHeld=d;dirSticky=d;const m=P[sel].manual;if(m)turnAround(m,bearingFor(d));claim();};const up=()=>{dirHeld=null;};
+ b.addEventListener('mousedown',down);b.addEventListener('touchstart',down,{passive:false});['mouseup','mouseleave','touchend'].forEach(ev=>b.addEventListener(ev,up));});
+const KEYS={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
+window.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'&&e.target.type==='text')return;const d=KEYS[e.code];if(!d||!P.length||!P[sel].manual)return;e.preventDefault();dirHeld=d;dirSticky=d;turnAround(P[sel].manual,bearingFor(d));claim();});
+window.addEventListener('keyup',e=>{const d=KEYS[e.code];if(d&&dirHeld===d)dirHeld=null;});
+if(D.synthetic){$('bm').value='none';$('bm').disabled=true;}
+if(!P.length){$('side').style.display='none';}else{buildRoster();selectPerson(0,true);}
+if(!D.bombs.length){const h=document.getElementById('hChip');if(h)h.textContent='No hazards in this scenario';}
+
+/* ---------- sync with the phone server (real phones on the same Wi-Fi) ---------- */
+function setConn(ok){connected=ok;}
+function snapshot(){const man={};P.forEach(p=>{if(p.manual)man[p.k]=Object.assign({},p.manual,{trail:p.manual.trail.slice(-300)});});return{owner:ME,run:D.run,t:t,playing:playing,speed:speed,sel:P.length?P[sel].k:null,names:names,manual:man};}
+function push(){if(!D.sync)return;fetch(D.sync,{method:'POST',body:JSON.stringify(snapshot())}).then(()=>setConn(true)).catch(()=>setConn(false));}
+function claim(){if(!D.sync)return;owner=ME;push();}
+function applyState(s){if(!s||(s.run!==null&&s.run!==undefined&&s.run!==D.run))return;if(!s.owner||s.owner===ME)return;owner=null;
+ if(s.names){Object.assign(names,s.names);P.forEach((p,i)=>{if(names[p.k]){p.name=names[p.k];const r=$('roster').children[i];if(r)r.querySelector('input').value=p.name;}});}
+ const si=P.findIndex(p=>p.k===s.sel);if(si>=0&&si!==sel)selectPerson(si,true);
+ if(s.speed&&s.speed!==speed){speed=s.speed;$('sp').value=String(speed);}
+ const est=s.t+(s.playing?(s.age||0)/1000*speed:0);if(Math.abs(est-t)>Math.max(2,speed*0.6)||!s.playing||playing!==s.playing)t=est;
+ if(playing!==!!s.playing){playing=!!s.playing;setPlay();}
+ P.forEach(p=>{const m=s.manual&&s.manual[p.k];if(m)p.manual=m;else if(p.manual)p.manual=null;});
+ tEnd=P.some(p=>p.manual)?tmaxData+1800:tmaxData;updateCtl();}
+if(D.sync){push();setInterval(async()=>{try{if(owner===ME)push();else{const r=await fetch(D.sync);applyState(await r.json());setConn(true);}}catch(e){setConn(false);}},400);}
+/* fit the iframe to the visible window so the whole page is visible without scrolling the page itself */
+function fitFrame(){try{const fe=window.frameElement;if(!fe)return;const top=fe.getBoundingClientRect().top,avail=window.parent.innerHeight-Math.max(0,top)-18;
+ const h=Math.max(520,Math.min(__HEIGHT__,Math.round(avail)));fe.style.height=h+'px';for(let e=fe.parentElement,i=0;e&&i<2;e=e.parentElement,i++){e.style.height=h+'px';e.style.minHeight='0';}$('root').style.height=h+'px';window.dispatchEvent(new Event('resize'));}catch(e){}}
+try{window.parent.addEventListener('resize',fitFrame);}catch(e){}setTimeout(fitFrame,60);setTimeout(fitFrame,600);
+requestAnimationFrame(tick);
+window.__pe={P,D,route,nearestNode,stepManual,startControl,selectPerson,get t(){return t;},set t(v){t=v;},get sel(){return sel;},play(){playing=true;setPlay();}};
+</script></body></html>
