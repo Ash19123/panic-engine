@@ -1,26 +1,26 @@
 """Look & feel plus small shared Streamlit helpers (no business logic)."""
-from __future__ import annotations
+from __future__ import annotations  # modern type hints on older Python
 
-from contextlib import contextmanager
-from typing import Iterator
+from contextlib import contextmanager  # turns a generator into a "with" block
+from typing import Iterator  # type hint
 
-import streamlit as st
+import streamlit as st  # the dashboard framework
 
-from config import settings
-from database.connection import connect
-from database.init_db import init_db
+from config import settings  # database path and attribution
+from database.connection import connect  # open the database
+from database.init_db import init_db  # create or migrate the database
 
-PALETTE = {
-    "ink": "#000000", "panel": "#0b0b0b", "line": "#2b2b2b", "text": "#f2f2f2", "muted": "#9a9a9a",
-    "accent": "#ffffff", "ok": "#e6e6e6", "warn": "#bdbdbd", "bad": "#ffffff", "info": "#cfcfcf",
+PALETTE = {  # colours used by the charts
+    "ink": "#000000", "panel": "#0b0b0b", "line": "#2b2b2b", "text": "#f2f2f2", "muted": "#9a9a9a",  # background and text colours
+    "accent": "#ffffff", "ok": "#e6e6e6", "warn": "#bdbdbd", "bad": "#ffffff", "info": "#cfcfcf",  # accent and status colours
 }
 # Agent states: colour AND a label are used so colour is never the only cue.
-STATE_STYLE = {
-    "WAITING": {"color": "#8b97a8", "label": "Waiting (not departed)", "glyph": "o"},
-    "MOVING": {"color": "#1ec850", "label": "Moving", "glyph": ">"},
-    "QUEUED": {"color": "#ffaa00", "label": "Queued / held", "glyph": "||"},
-    "EVACUATED": {"color": "#009624", "label": "Evacuated", "glyph": "+"},
-    "UNABLE_TO_EVACUATE": {"color": "#d62020", "label": "Unable to evacuate", "glyph": "x"},
+STATE_STYLE = {  # how each agent state is shown
+    "WAITING": {"color": "#8b97a8", "label": "Waiting (not departed)", "glyph": "o"},  # grey
+    "MOVING": {"color": "#1ec850", "label": "Moving", "glyph": ">"},  # green
+    "QUEUED": {"color": "#ffaa00", "label": "Queued / held", "glyph": "||"},  # amber
+    "EVACUATED": {"color": "#009624", "label": "Evacuated", "glyph": "+"},  # dark green
+    "UNABLE_TO_EVACUATE": {"color": "#d62020", "label": "Unable to evacuate", "glyph": "x"},  # red
 }
 
 CSS = """
@@ -78,113 +78,113 @@ section[data-testid="stSidebar"] h3 { font-size:.8rem; letter-spacing:.16em; tex
   border-top:1px solid #2b2b2b; padding-top:.7rem; margin-top:.6rem; }
 section[data-testid="stSidebar"] details { border:1px solid #2b2b2b; background:#070707; }
 </style>
-"""
+"""  # the black-and-white theme as one CSS block that is injected into the page
 
-DISCLAIMER = ("Educational simulation and preliminary decision-support prototype. Results depend entirely on the "
-              "stated model assumptions; they are NOT validated predictions of real crowd behaviour and must not "
-              "be used for real emergency planning.")
+DISCLAIMER = ("Educational simulation and preliminary decision-support prototype. Results depend entirely on the "  # text (1)
+              "stated model assumptions; they are NOT validated predictions of real crowd behaviour and must not "  # text (2)
+              "be used for real emergency planning.")  # text (3)
 
 
-def _stretch() -> dict:
+def _stretch() -> dict:  # which keyword makes widgets fill their container
     """Keyword that makes a widget fill its container, valid for the installed Streamlit.
 
     ``use_container_width=True`` is deprecated (and removed in newer releases); ``width="stretch"`` replaces it.
     """
-    try:
-        major, minor = (int(x) for x in st.__version__.split(".")[:2])
+    try:  # the version string may be unusual
+        major, minor = (int(x) for x in st.__version__.split(".")[:2])  # first two numbers of the version
     except ValueError:                                  # unusual version string: assume a recent release
-        return {"width": "stretch"}
-    return {"width": "stretch"} if (major, minor) >= (1, 52) else {"use_container_width": True}
+        return {"width": "stretch"}  # the new keyword
+    return {"width": "stretch"} if (major, minor) >= (1, 52) else {"use_container_width": True}  # new keyword from 1.52, old one before
 
 
-STRETCH = _stretch()
+STRETCH = _stretch()  # computed once at import time
 
 
-def setup_page(title: str, subtitle: str = "", icon: str = "🚨", header: bool = True) -> None:
-    st.set_page_config(page_title=f"PANIC ENGINE - {title}", page_icon=icon, layout="wide")
-    st.markdown(CSS, unsafe_allow_html=True)
-    if header:
-        st.title(title)
-        if subtitle:
-            st.caption(subtitle)
-    ensure_db()
+def setup_page(title: str, subtitle: str = "", icon: str = "🚨", header: bool = True) -> None:  # common page setup
+    st.set_page_config(page_title=f"PANIC ENGINE - {title}", page_icon=icon, layout="wide")  # browser tab title and wide layout
+    st.markdown(CSS, unsafe_allow_html=True)  # apply the theme
+    if header:  # show a title
+        st.title(title)  # big title
+        if subtitle:  # and a caption
+            st.caption(subtitle)  # small text under it
+    ensure_db()  # make sure the database exists
 
 
 @st.cache_resource(show_spinner=False)
-def _init_once(path: str) -> bool:
-    init_db(path).close()
-    return True
+def _init_once(path: str) -> bool:  # create or migrate the database once per process
+    init_db(path).close()  # run the migrations and close the connection
+    return True  # cached result
 
 
-def ensure_db() -> None:
-    _init_once(str(settings.DB_PATH))
+def ensure_db() -> None:  # make sure the database is ready
+    _init_once(str(settings.DB_PATH))  # cached, so it runs only once
 
 
 @contextmanager
-def db() -> Iterator:
+def db() -> Iterator:  # "with db() as conn:"
     """Short-lived connection per page run (SQLite connections are not shared across Streamlit threads)."""
-    conn = connect()
-    try:
-        yield conn
-    finally:
-        conn.close()
+    conn = connect()  # open
+    try:  # run the caller's block
+        yield conn  # hand the connection over
+    finally:  # always
+        conn.close()  # close it
 
 
-def source_badge(is_synthetic: bool) -> None:
-    if is_synthetic:
-        st.markdown('<span class="pe-badge pe-synth">SYNTHETIC NETWORK - not real roads</span>', unsafe_allow_html=True)
-    else:
-        st.markdown('<span class="pe-badge pe-real">REAL OpenStreetMap DATA</span>', unsafe_allow_html=True)
-        st.caption(settings.OSM_ATTRIBUTION)
+def source_badge(is_synthetic: bool) -> None:  # label showing where the map came from
+    if is_synthetic:  # fake grid
+        st.markdown('<span class="pe-badge pe-synth">SYNTHETIC NETWORK - not real roads</span>', unsafe_allow_html=True)  # warning badge
+    else:  # real map
+        st.markdown('<span class="pe-badge pe-real">REAL OpenStreetMap DATA</span>', unsafe_allow_html=True)  # real-data badge
+        st.caption(settings.OSM_ATTRIBUTION)  # required credit
 
 
-def note(text: str, warn: bool = False) -> None:
-    cls = "pe-note pe-disclaimer" if warn else "pe-note"
-    st.markdown(f'<div class="{cls}">{text}</div>', unsafe_allow_html=True)
+def note(text: str, warn: bool = False) -> None:  # a highlighted note box
+    cls = "pe-note pe-disclaimer" if warn else "pe-note"  # style class
+    st.markdown(f'<div class="{cls}">{text}</div>', unsafe_allow_html=True)  # show it
 
 
-def disclaimer() -> None:
-    note(DISCLAIMER, warn=True)
+def disclaimer() -> None:  # the standard honesty disclaimer
+    note(DISCLAIMER, warn=True)  # as a warning-style note
 
 
-def fmt_pct(x) -> str:
-    return "n/a" if x is None or x != x else f"{100 * x:.1f}%"
+def fmt_pct(x) -> str:  # format a fraction as a percentage
+    return "n/a" if x is None or x != x else f"{100 * x:.1f}%"  # n/a for missing or NaN
 
 
-def fmt_num(x, unit: str = "") -> str:
-    return "n/a" if x is None or x != x else f"{x:,.1f}{unit}"
+def fmt_num(x, unit: str = "") -> str:  # format a number with thousands separators
+    return "n/a" if x is None or x != x else f"{x:,.1f}{unit}"  # n/a for missing or NaN
 
 
 @st.cache_resource(show_spinner=False)
-def _load_network_cached(network_id: str):
-    from database import repositories as repo
-    with db() as conn:
-        return repo.load_network(conn, network_id)
+def _load_network_cached(network_id: str):  # load a network once and keep it in memory
+    from database import repositories as repo  # imported here to avoid a circular import
+    with db() as conn:  # short-lived connection
+        return repo.load_network(conn, network_id)  # the network
 
 
-def current_network(conn):
+def current_network(conn):  # the network chosen in the UI
     """Network chosen on the Study Area page (or the newest one in the database)."""
-    from database import repositories as repo
-    nets = repo.list_networks(conn)
-    if not nets:
-        return None
-    ids = [n["network_id"] for n in nets]
-    nid = st.session_state.get("network_id")
-    if nid not in ids:
-        nid = ids[0]
-        st.session_state["network_id"] = nid
-    return _load_network_cached(nid)
+    from database import repositories as repo  # imported here to avoid a circular import
+    nets = repo.list_networks(conn)  # all stored networks
+    if not nets:  # none yet
+        return None  # nothing to return
+    ids = [n["network_id"] for n in nets]  # their ids
+    nid = st.session_state.get("network_id")  # the one chosen earlier
+    if nid not in ids:  # none chosen or no longer present
+        nid = ids[0]  # use the newest
+        st.session_state["network_id"] = nid  # remember it
+    return _load_network_cached(nid)  # the network
 
 
-def ensure_demo_button(conn) -> bool:
+def ensure_demo_button(conn) -> bool:  # offer demo data when the database is empty
     """Offer one-click synthetic demo data when the database has no network yet."""
-    from database import repositories as repo
-    if repo.list_networks(conn):
-        return True
-    st.info("The database has no road network yet. Use the synthetic demonstration (no internet needed) "
-            "or download OpenStreetMap data on the Study Area page.")
-    if st.button("Create synthetic demo network + demo scenario"):
-        from database.seed_data import seed
-        seed(conn)
-        st.rerun()
-    return False
+    from database import repositories as repo  # imported here to avoid a circular import
+    if repo.list_networks(conn):  # data exists
+        return True  # nothing to offer
+    st.info("The database has no road network yet. Use the synthetic demonstration (no internet needed) "  # message (1)
+            "or download OpenStreetMap data on the Study Area page.")  # message (2)
+    if st.button("Create synthetic demo network + demo scenario"):  # the user clicks
+        from database.seed_data import seed  # imported only when needed
+        seed(conn)  # create the demo data
+        st.rerun()  # redraw the page
+    return False  # still no data
