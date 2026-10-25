@@ -1,5 +1,5 @@
 """PANIC ENGINE - single-page LIVE 3-D evacuation + bomb-alert simulator.   Launch with:  streamlit run app.py
-
+Toggle
 Sidebar: MAP, SIMULATION, BOMB AREAS, DANGER ZONES, PEOPLE.
 Tabs: Live simulation (3-D replay + phone + manual control), Analytics, Strategies, SQL.
 A phone page (phone_server.py) mirrors the simulation on a real phone.
