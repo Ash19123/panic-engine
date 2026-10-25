@@ -418,7 +418,7 @@ with open_db() as conn:  # one SQLite connection for this whole page run
 
     tabs = st.tabs(["▶ LIVE SIMULATION", "📊 ANALYTICS", "⚖ STRATEGIES", "🗄 SQL"])  # the four tabs
     with tabs[0]:  # ---- LIVE SIMULATION tab
-        c1, c2, c3, c4 = st.columns([2, 3.6, 1.3, 1.5])  # demo button | run picker | phone button | safe-stop card button
+        c1, c2, c3 = st.columns([2, 3.6, 1.5])  # demo button | run picker | phone button
         if c1.button("💣 RUN BOMB-ALERT DEMO", type="primary", **STRETCH,  # one-click demo
                      disabled=st.session_state.get("busy", False)):  # disabled while busy
             st.session_state["busy"] = True  # block duplicate clicks
@@ -458,18 +458,6 @@ with open_db() as conn:  # one SQLite connection for this whole page run
                 except ImportError:  # segno not installed
                     st.caption("pip install segno to show a QR code")  # tell the user how to get it
                 st.caption("Same Wi-Fi as this PC")  # the phone must be on the same network
-            with c4.popover("🏠 SAFE-STOP CARD", **STRETCH):  # page that works BEFORE any alert: where is my nearest safe stop?
-                surl = phone_server.safe_url(phone_port, by_id[run_id]["scenario_id"])  # http://<this PC>:<port>/safe?scenario=<id>
-                st.code(surl, language=None)  # show the address
-                try:  # QR code needs the optional "segno" package
-                    import io as _io  # in-memory byte buffer
-                    import segno as _segno  # QR code generator
-                    sbuf = _io.BytesIO()  # buffer for the PNG
-                    _segno.make(surl, error="m").save(sbuf, kind="png", scale=6, border=2)  # draw the QR code
-                    st.image(sbuf.getvalue(), width=190)  # show it
-                except ImportError:  # segno missing
-                    st.caption("pip install segno to show a QR code")  # tell the user how to get it
-                st.link_button("Open the page", surl)  # open it in this browser (print the card from there)
             run = by_id[run_id]  # the SQL row of the chosen run (already fetched above)
             frames = conn.execute(FRAME_COUNT_SQL, (run_id,)).fetchone()[0]  # SQL: number of stored replay frames
             if not frames:  # nothing to animate

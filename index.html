@@ -1,54 +1,179 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PANIC ENGINE</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PANIC ENGINE | Evacuation and alert simulator</title>
+<meta name="description" content="An agent-based simulator that tests how routing and warning time change who reaches safety in an emergency. College project, Amrita Vishwa Vidyapeetham, Amaravati.">
 <style>
-:root{--blue:#2b5c9e;--navy:#1b2a41;--panel:#f0f2f5;--chip:#dce4ee;--ink:#222}
-*{box-sizing:border-box}body{margin:0;font:17px/1.55 Arial,Helvetica,sans-serif;color:var(--ink);background:#fff}
-.bar{background:var(--navy);color:#fff;padding:10px 20px;font-size:14px;letter-spacing:.08em}
-main{max-width:900px;margin:0 auto;padding:28px 20px 60px}
-h1{color:var(--blue);font-size:34px;line-height:1.2;margin:.2em 0}h2{color:var(--blue);font-size:22px;margin:1.6em 0 .4em}
-.sub{font-size:19px;color:#444;margin:0 0 14px}.chips span{display:inline-block;background:var(--chip);color:#334;font-size:13px;
-border-radius:12px;padding:2px 10px;margin:0 6px 6px 0}
-.panel{background:var(--panel);border-radius:8px;padding:16px 20px;margin:14px 0}.panel p{margin:.3em 0}
-.btns{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}.btns a{background:var(--blue);color:#fff;text-decoration:none;padding:12px 20px;
-border-radius:6px;font-weight:bold}.btns a.alt{background:#fff;color:var(--blue);border:2px solid var(--blue)}
-table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px solid #dde;padding:7px 8px;text-align:left;vertical-align:top}
-th{background:var(--panel)}code{background:var(--panel);padding:1px 5px;border-radius:4px;font-size:14px}
-.cite{border-left:4px solid var(--blue)}small{color:#555}footer{color:#555;font-size:14px;margin-top:40px}
-</style></head><body>
-<div class="bar">PANIC ENGINE</div>
-<main>
-<h1>PANIC ENGINE</h1>
-<p class="sub">An agent-based evacuation and emergency-alert simulator, with a live 3D replay, a phone view and a nearest safe-stop card.</p>
-<div class="chips"><span>agent-based model</span><span>evacuation</span><span>alert channels</span><span>OpenStreetMap</span><span>SQLite</span><span>NetworkX</span></div>
-<div class="btns"><a href="live.html">Open the live 3D demo</a><a href="safe.html">Find my nearest safe stop</a>
-<a class="alt" href="https://github.com/Ash19123/panic-engine">Source code</a></div>
-<div class="panel"><p><b>Educational model.</b> This is a college project, not a real alert system and not a validated predictor.
-Safe stops are hypothetical, not official shelters. Nothing here sends a message to anyone.</p></div>
+:root{--blue:#2b5c9e;--blue-d:#1f4678;--navy:#1b2a41;--ink:#1d2433;--mute:#5b667a;--line:#e3e8f0;--panel:#f3f6fa;--chip:#dce6f3;--green:#1f9d55;--red:#d64545;--amber:#e0a030}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:17px/1.6 "Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#fff}
+a{color:var(--blue)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+/* top bar */
+nav{position:sticky;top:0;z-index:10;background:rgba(27,42,65,.96);backdrop-filter:blur(6px)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+nav b{color:#fff;letter-spacing:.14em;font-size:15px}
+nav a{color:#c9d6ea;text-decoration:none;margin-left:22px;font-size:14px}
+nav a:hover{color:#fff}
+/* hero */
+.hero{background:linear-gradient(180deg,#eef4fc 0%,#fff 100%);padding:64px 0 40px;text-align:center}
+.pill{display:inline-block;background:var(--chip);color:var(--blue-d);font-size:13px;font-weight:600;border-radius:20px;padding:4px 14px;margin-bottom:18px}
+h1{font-size:clamp(36px,6vw,58px);line-height:1.08;margin:0 0 14px;color:var(--blue);letter-spacing:-.02em}
+.lead{font-size:clamp(18px,2.4vw,22px);color:var(--mute);max-width:720px;margin:0 auto 26px}
+.btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:38px}
+.btn{display:inline-block;padding:13px 24px;border-radius:8px;font-weight:700;text-decoration:none;font-size:16px}
+.btn.p{background:var(--blue);color:#fff;box-shadow:0 6px 18px rgba(43,92,158,.3)}
+.btn.p:hover{background:var(--blue-d)}
+.btn.s{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+.frame{max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(27,42,65,.28);border:1px solid #0e1626;background:#0e1626}
+.frame .top{display:flex;gap:6px;padding:9px 12px;background:#1b2740}
+.frame .top i{width:10px;height:10px;border-radius:50%;background:#51607c}
+.frame img{display:block;width:100%;height:auto}
+.cap{font-size:14px;color:var(--mute);margin-top:12px}
+/* sections */
+section{padding:60px 0}
+section.alt{background:var(--panel)}
+h2{font-size:30px;color:var(--blue);margin:0 0 8px;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 30px;max-width:700px}
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;box-shadow:0 2px 8px rgba(27,42,65,.05)}
+.card h3{margin:0 0 6px;font-size:18px;color:var(--navy)}
+.card p{margin:0;color:var(--mute);font-size:15.5px}
+.ico{width:42px;height:42px;border-radius:10px;background:var(--chip);color:var(--blue-d);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px}
+.problem{background:var(--navy);color:#fff;border-radius:16px;padding:34px 36px}
+.problem p{margin:0;font-size:clamp(19px,2.6vw,25px);line-height:1.45}
+.problem b{color:#9cc3f5}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
+.flow div{background:rgba(255,255,255,.08);border-radius:10px;padding:14px 16px;font-size:15px;color:#d5e1f3}
+.flow span{display:block;color:#9cc3f5;font-weight:700;font-size:13px;margin-bottom:2px}
+/* stats */
+.stat{text-align:center}
+.stat b{display:block;font-size:40px;color:var(--blue);line-height:1.1}
+.stat span{color:var(--mute);font-size:15px}
+/* steps */
+.steps{counter-reset:s;display:grid;gap:14px}
+.step{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.step:before{counter-increment:s;content:counter(s);flex:none;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step h3{margin:0;font-size:17px}
+.step p{margin:2px 0 0;color:var(--mute);font-size:15.5px}
+/* bars */
+.bars{display:grid;gap:22px}
+.row h3{margin:0 0 8px;font-size:16px;color:var(--navy)}
+.bar{display:flex;align-items:center;gap:12px;margin:5px 0}
+.bar label{width:150px;font-size:14px;color:var(--mute);flex:none}
+.track{flex:1;background:#e8edf5;border-radius:6px;height:26px;overflow:hidden}
+.fill{height:100%;border-radius:6px;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;padding-left:10px}
+.fill.a{background:#8b97ad}.fill.b{background:var(--green)}
+/* panels */
+.panel{background:var(--panel);border-left:5px solid var(--blue);border-radius:10px;padding:22px 26px}
+.panel h3{margin:0 0 8px;color:var(--navy)}
+.panel p{margin:0 0 8px}
+.chips span{display:inline-block;background:var(--chip);color:var(--blue-d);font-size:13px;border-radius:14px;padding:3px 12px;margin:0 6px 6px 0}
+.warn{background:#fff8ea;border-left-color:var(--amber)}
+ul.tick{margin:0;padding-left:20px;color:var(--mute)}
+footer{background:var(--navy);color:#aebbd0;padding:34px 0;font-size:14px}
+footer a{color:#cfe0f8}
+@media(max-width:640px){nav a{margin-left:12px;font-size:13px}.bar label{width:96px}.problem{padding:24px}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b>PANIC ENGINE</b>
+<div><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#results">Results</a><a href="#inspiration">Inspiration</a><a href="https://github.com/Ash19123/panic-engine">Code</a></div></div></nav>
 
+<header class="hero"><div class="wrap">
+<span class="pill">Agent-based evacuation simulator &middot; Amrita Vishwa Vidyapeetham, Amaravati</span>
+<h1>Who reaches safety in time?</h1>
+<p class="lead">PANIC ENGINE simulates a crowd evacuating a real campus road map after a warning. It tests how routing and warning time change the outcome.</p>
+<div class="btns"><a class="btn p" href="live.html">Open the live 3D demo</a><a class="btn s" href="https://github.com/Ash19123/panic-engine">View the source</a></div>
+<div class="frame"><div class="top"><i></i><i></i><i></i></div><img src="hero.jpg" alt="Live 3D replay: roads, safe stops in green, blast area in red, and a simulated phone showing the route to the nearest safe stop"></div>
+<p class="cap">A saved run on the real OpenStreetMap campus network: 250 people, a blast area (red), the alert area (amber) and hypothetical safe stops (green).</p>
+</div></header>
+
+<section id="problem"><div class="wrap">
 <h2>The problem</h2>
-<div class="panel"><p><b>When an alert goes out, everyone is told to go to a safe place at the same moment.</b> They all choose the nearest exits and the same roads,
-so queues form and some people run out of time before the strike. <b>How should people be routed, and how much warning time is needed, so that most reach safety in time?</b></p></div>
-<p>PANIC ENGINE answers this on the road network of Amrita Vishwa Vidyapeetham, Amaravati. In the simulation everyone receives the alert on their phone;
-what differs is the route they take and how early the alert comes.</p>
+<p class="sub">An alert helps only if people can act on it in the time they have.</p>
+<div class="problem">
+<p><b>When an alert goes out, everyone is told to go to a safe place at the same moment.</b> They all pick the nearest exits and the same roads, so queues form and some people run out of time before the strike.</p>
+<p style="margin-top:14px"><b>How should people be routed, and how much warning time is needed, so that most reach safety in time?</b></p>
+<div class="flow">
+<div><span>1 &middot; ALERT</span>Everyone receives the warning at once.</div>
+<div><span>2 &middot; SAME ROADS</span>Each person takes the shortest path to the nearest safe stop.</div>
+<div><span>3 &middot; QUEUES</span>Roads fill, travel slows, and time runs out.</div>
+</div></div>
+</div></section>
 
-<h2>What you can try on this page</h2>
-<table><tr><th>Page</th><th>What it shows</th></tr>
-<tr><td><a href="live.html">Live 3D demo</a></td><td>A stored bomb-alert drill on the real campus-area road map: 250 people, a blast area, an alert area,
-safe stops, a simulated phone with alarm, route and tracking, and manual control of one person.</td></tr>
-<tr><td><a href="safe.html">Safe-stop card</a></td><td>Tap the map or use your location to see the nearest safe stop, walking distance, directions and a printable card with a QR code.</td></tr></table>
-<p><small>These pages replay a saved run. To run new simulations, the alert planner and the SQL console, run the full Streamlit app from the repository.</small></p>
+<section class="alt"><div class="wrap"><div class="grid g4">
+<div class="card stat"><b>250</b><span>people in the demo run</span></div>
+<div class="card stat"><b>6,916</b><span>road nodes on the campus map</span></div>
+<div class="card stat"><b>3</b><span>routing strategies compared</span></div>
+<div class="card stat"><b>80</b><span>automated tests passing</span></div>
+</div></div></section>
 
+<section id="how"><div class="wrap">
 <h2>How it works</h2>
-<p>Agents walk a road graph with capacity-limited roads and safe stops. Three routing strategies (shortest path, congestion-aware, load-balanced) are compared on identical crowds,
-and the alert time before a bomb strike can be varied. Every run is stored in SQLite and analysed with SQL. In our runs, congestion-aware routing got more people to safety than
-shortest-path routing (for example 100% against 81% in one run on the campus map); the numbers depend on assumed speeds, capacities and reaction delays.</p>
+<p class="sub">Five parts, built in this order. Each one is simple on its own.</p>
+<div class="steps">
+<div class="step"><div><h3>A real road network</h3><p>Roads come from OpenStreetMap. Each road has a length, a walking time and a capacity. A labelled synthetic grid is the fallback.</p></div></div>
+<div class="step"><div><h3>Agents with a life cycle</h3><p>Each person is waiting, moving, queued, evacuated or unable to evacuate. A seed makes every run reproducible.</p></div></div>
+<div class="step"><div><h3>Routing that sees crowds</h3><p>Dijkstra finds paths. The congestion-aware version adds the slowdown from crowding, so people spread over more roads and safe stops.</p></div></div>
+<div class="step"><div><h3>A bomb scenario</h3><p>A blast radius, an alert radius, an alert time and a strike time. At the strike, roads and safe stops inside the blast are lost.</p></div></div>
+<div class="step"><div><h3>Everything stored in SQL</h3><p>Every run is saved in SQLite and analysed with SQL: joins, window functions and integrity checks.</p></div></div>
+</div></div></section>
 
-<div class="panel cite"><p><b>Inspiration.</b> We took inspiration from Carles, Chapuis, Douvinet, P&eacute;roche and Bopp (2024),
-&ldquo;An Agent-Based Model to Simulate the Effects of Tsunami Warnings on Pedestrian Evacuation: Sensitivity Analysis and Early Findings&rdquo;,
-PRIMA 2024, pp. 369&ndash;384, DOI 10.1007/978-3-031-77367-9_28 (HAL hal-04794796).
-They study sirens versus cell broadcast and alert timing for a tsunami in Cannes. PANIC ENGINE is our own model for a bomb scenario;
-it is inspired by their questions and is not a replication of their work.</p></div>
+<section class="alt"><div class="wrap">
+<h2>What is in the prototype</h2>
+<p class="sub">One Streamlit app, plus a live replay you can open here.</p>
+<div class="grid g3">
+<div class="card"><div class="ico">3D</div><h3>Live 3D replay</h3><p>Watch people leave, queue and reach safe stops on the real map, then see the blast.</p></div>
+<div class="card"><div class="ico">&#9742;</div><h3>Phone view</h3><p>A simulated phone shows the alarm, the nearest safe stop, the route and live tracking. You can take control of one person.</p></div>
+<div class="card"><div class="ico">&#8644;</div><h3>Strategy comparison</h3><p>Shortest path, congestion-aware and load-balanced routing on identical crowds.</p></div>
+<div class="card"><div class="ico">&#9201;</div><h3>Lead-time experiment</h3><p>Change how early the alert comes and see how many are safe before the strike.</p></div>
+<div class="card"><div class="ico">SQL</div><h3>SQL analytics</h3><p>A query catalogue, a read-only console and nine integrity checks.</p></div>
+<div class="card"><div class="ico">&#10003;</div><h3>Verified</h3><p>80 tests, plus a check that the same seed gives the same result.</p></div>
+</div></div></section>
 
-<footer>Map data &copy; OpenStreetMap contributors (ODbL). Code: <a href="https://github.com/Ash19123/panic-engine">github.com/Ash19123/panic-engine</a></footer>
-</main></body></html>
+<section id="results"><div class="wrap">
+<h2>What we saw</h2>
+<p class="sub">Routing that avoids crowded roads got more people to safety than everyone taking the shortest path.</p>
+<div class="bars">
+<div class="row"><h3>Synthetic grid, normal scenario</h3>
+<div class="bar"><label>Shortest path</label><div class="track"><div class="fill a" style="width:84%">about 84%</div></div></div>
+<div class="bar"><label>Congestion-aware</label><div class="track"><div class="fill b" style="width:98%">98 to 99%</div></div></div></div>
+<div class="row"><h3>Campus map (6,916 nodes), one run</h3>
+<div class="bar"><label>Shortest path</label><div class="track"><div class="fill a" style="width:81%">81%</div></div></div>
+<div class="bar"><label>Congestion-aware</label><div class="track"><div class="fill b" style="width:100%">100%</div></div></div></div>
+</div>
+<p class="cap">Share of people who reached a safe stop. These are single runs of an educational model with assumed walking speeds, capacities and reaction delays. They show direction, not real-world prediction.</p>
+</div></section>
+
+<section id="inspiration" class="alt"><div class="wrap">
+<h2>Inspiration</h2>
+<div class="panel">
+<h3>Carles, Chapuis, Douvinet, P&eacute;roche and Bopp (2024)</h3>
+<p>&ldquo;An Agent-Based Model to Simulate the Effects of Tsunami Warnings on Pedestrian Evacuation: Sensitivity Analysis and Early Findings.&rdquo; PRIMA 2024, pp. 369&ndash;384. DOI 10.1007/978-3-031-77367-9_28. HAL hal-04794796.</p>
+<p>They simulate tsunami warnings in Cannes and study alert timing and whether pedestrians reach safety in time. We took inspiration from these questions. PANIC ENGINE is our own model for a bomb scenario, not a replication of their work.</p>
+<div class="chips"><span>agent-based model</span><span>evacuation</span><span>alert timing</span><span>OpenStreetMap</span><span>SQLite</span><span>NetworkX</span></div>
+</div></div></section>
+
+<section><div class="wrap">
+<h2>Limits and ethics</h2>
+<div class="panel warn">
+<ul class="tick">
+<li>This is an educational model. It is not a real alert system and cannot send a message to anyone.</li>
+<li>It is not validated against real evacuations. Speeds, capacities and delays are assumptions.</li>
+<li>Safe stops are hypothetical, not official shelters.</li>
+<li>The blast is a radius rule only. No injuries or casualties are modelled or shown.</li>
+</ul></div>
+</div></section>
+
+<footer><div class="wrap">
+<p><b style="color:#fff">PANIC ENGINE</b> &middot; <a href="live.html">Live demo</a> &middot; <a href="https://github.com/Ash19123/panic-engine">github.com/Ash19123/panic-engine</a></p>
+<p>Map data &copy; OpenStreetMap contributors (ODbL). This page replays one saved run; new simulations need the Streamlit app from the repository.</p>
+</div></footer>
+</body>
+</html>

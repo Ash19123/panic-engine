@@ -89,36 +89,3 @@ def test_phone_js_syntax_and_logic(seeded, tmp_path):
     main.write_text(scripts[-1], encoding="utf-8")
     out = subprocess.run([NODE, "--check", str(main)], capture_output=True, text=True)
     assert out.returncode == 0, out.stderr
-
-
-def test_safe_stop_page_and_qr(seeded, monkeypatch):
-    conn, sid = seeded
-    from config import settings
-    monkeypatch.setattr(settings, "DB_PATH", Path(conn.execute("PRAGMA database_list").fetchone()[2]))
-    monkeypatch.setattr(ps, "_SERVER", None)
-    monkeypatch.setattr(ps, "_PORT", None)
-    ps.reset_state()
-    port = ps.ensure_started(18790)
-    try:
-        base = f"http://127.0.0.1:{port}"
-        page = _get(f"{base}/safe?scenario={sid}")
-        assert "My nearest safe stop" in page and "deck.Deck" not in page and len(page) < 600_000
-        data = json.loads(re.search(r"const D=(\{.*?\}),\$=id", page, re.S).group(1))
-        assert data["safe"] and data["bombs"] == [] and data["closures"] == [] and data["scenario"] == sid
-        assert _get(f"{base}/safe").startswith("<!DOCTYPE html>")                      # default = newest scenario with safe stops
-        svg = _get(f"{base}/qr?data=" + urllib.request.quote(f"{base}/safe?lat=16.45&lon=80.53"))
-        assert svg.lstrip().startswith("<svg") and "path" in svg
-    finally:
-        ps._SERVER.shutdown()
-
-
-@pytest.mark.skipif(NODE is None, reason="Node.js not installed")
-def test_safe_page_js_syntax_and_directions(seeded, tmp_path):
-    conn, sid = seeded
-    cfg = repo.load_scenario_config(conn, sid)
-    net = repo.load_network(conn, cfg.network_id)
-    page = lv.build_safe_html(net, cfg.destinations, sid)
-    main = tmp_path / "safe_main.js"
-    main.write_text(re.findall(r"<script>(.*?)</script>", page, re.S)[-1], encoding="utf-8")
-    out = subprocess.run([NODE, "--check", str(main)], capture_output=True, text=True)
-    assert out.returncode == 0, out.stderr

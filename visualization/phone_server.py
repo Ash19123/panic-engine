@@ -29,7 +29,6 @@ _LOCK = threading.Lock()
 _STATE: Dict = {"run": None, "owner": None, "t": 0.0, "playing": False, "speed": 60, "sel": None, "names": {},
                 "manual": {}, "recv": time.time()}
 _PAGES: Dict[int, str] = {}
-_SAFE_PAGES: Dict[int, str] = {}
 _SERVER: Optional[ThreadingHTTPServer] = None
 _PORT: Optional[int] = None
 
@@ -64,34 +63,6 @@ def phone_page(run_id: Optional[int]) -> str:
         return _PAGES[run_id]
     finally:
         conn.close()
-
-
-def safe_page(scenario_id: Optional[int]) -> str:
-    """The pre-alert "my nearest safe stop" page for a scenario (default: the newest one that has safe stops)."""
-    from visualization import live_view as lv
-    conn = connect()
-    try:
-        if scenario_id is None:
-            row = conn.execute("SELECT MAX(scenario_id) FROM scenario_destinations").fetchone()
-            scenario_id = row[0] if row else None
-        if scenario_id is None:
-            return "<h3>No scenario with safe stops yet. Create one on the dashboard first.</h3>"
-        if scenario_id not in _SAFE_PAGES:
-            cfg = repo.load_scenario_config(conn, scenario_id)
-            net = repo.load_network(conn, cfg.network_id)
-            _SAFE_PAGES[scenario_id] = lv.build_safe_html(net, cfg.destinations, scenario_id)
-        return _SAFE_PAGES[scenario_id]
-    finally:
-        conn.close()
-
-
-def qr_svg(text: str) -> bytes:
-    """QR code (SVG) for a short text such as the link printed on the safe-stop card."""
-    import io
-    import segno
-    buf = io.BytesIO()
-    segno.make(text[:600], error="m").save(buf, kind="svg", scale=5, border=2, xmldecl=False)
-    return buf.getvalue()
 
 
 class _Handler(BaseHTTPRequestHandler):
@@ -131,18 +102,6 @@ class _Handler(BaseHTTPRequestHandler):
             except Exception as exc:      # report to the phone instead of dropping the connection
                 log.exception("phone page failed")
                 self._send(500, f"<h3>Could not build the phone page</h3><pre>{exc}</pre>".encode(), "text/html; charset=utf-8")
-        elif url.path == "/safe":
-            sid = parse_qs(url.query).get("scenario", [None])[0]
-            try:
-                self._send(200, safe_page(int(sid) if sid else None).encode("utf-8"), "text/html; charset=utf-8")
-            except Exception as exc:
-                log.exception("safe page failed")
-                self._send(500, f"<h3>Could not build the page</h3><pre>{exc}</pre>".encode(), "text/html; charset=utf-8")
-        elif url.path == "/qr":
-            try:
-                self._send(200, qr_svg(parse_qs(url.query).get("data", [""])[0]), "image/svg+xml")
-            except ImportError:
-                self._send(501, b"pip install segno", "text/plain")
         else:
             self._send(404, b"not found", "text/plain")
 
@@ -183,10 +142,6 @@ def ensure_started(port: Optional[int] = None) -> int:
     return _PORT
 
 
-def safe_url(port: int, scenario_id: Optional[int] = None) -> str:
-    return f"http://{lan_ip()}:{port}/safe" + (f"?scenario={scenario_id}" if scenario_id else "")
-
-
 def phone_url(port: int, run_id: Optional[int] = None) -> str:
     return f"http://{lan_ip()}:{port}/phone" + (f"?run={run_id}" if run_id else "")
 
@@ -196,4 +151,3 @@ def reset_state() -> None:
         _STATE.update({"run": None, "owner": None, "t": 0.0, "playing": False, "speed": 60, "sel": None, "names": {},
                        "manual": {}, "recv": time.time()})
     _PAGES.clear()
-    _SAFE_PAGES.clear()

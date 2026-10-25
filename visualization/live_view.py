@@ -32,7 +32,6 @@ from visualization import scene3d as sc
 TEMPLATE = Path(__file__).with_name("live_template.html")
 CORE = Path(__file__).with_name("live_core.js")
 PHONE_TEMPLATE = Path(__file__).with_name("live_phone.html")
-SAFE_TEMPLATE = Path(__file__).with_name("safe_page.html")
 PEOPLE_NAMES = ["Aarav", "Diya", "Kavya", "Rohan", "Meera", "Arjun", "Sana", "Vikram", "Ishita", "Kabir",
                 "Anaya", "Dev", "Neha", "Rahul", "Tara", "Imran"]     # fictional demo names, editable in the page
 STATE_CODE = {"WAITING": 0, "MOVING": 1, "QUEUED": 2, "EVACUATED": 3, "UNABLE_TO_EVACUATE": 4}
@@ -207,33 +206,4 @@ def build_phone_html(net: RoadNetwork, bundle: dict, destinations: Sequence[Dest
             "closures": full["closures"], "view": full["view"], "synthetic": full["synthetic"], "run": run_id,
             "sync": sync_url}
     return (PHONE_TEMPLATE.read_text(encoding="utf-8").replace("__CORE__", CORE.read_text(encoding="utf-8"))
-            .replace("__DATA__", json.dumps(data, separators=(",", ":"))))
-
-
-def build_safe_html(net: RoadNetwork, destinations: Sequence[DestinationSpec], scenario_id: Optional[int] = None) -> str:
-    """"Know your nearest safe stop" page: works BEFORE any alert (no run, no bomb).
-
-    The visitor picks where they live (tap the map, type coordinates or use device location) and gets the nearest
-    safe stop, walking distance/time, plain-language directions, a backup stop and a printable card with a QR code.
-    """
-    node_ids = sorted(net.nodes)
-    nidx = {nid: i for i, nid in enumerate(node_ids)}
-    seen, road_of = {}, {}
-    for eid, e in net.edges.items():
-        road_of[eid] = seen.setdefault((min(e.source, e.target), max(e.source, e.target)), len(seen))
-    graph = {"lon": [_r(net.nodes[i].lon) for i in node_ids], "lat": [_r(net.nodes[i].lat) for i in node_ids],
-             "eu": [nidx[e.source] for e in net.edges.values()], "ev": [nidx[e.target] for e in net.edges.values()],
-             "el": [round(e.length_m, 1) for e in net.edges.values()], "er": [road_of[eid] for eid in net.edges]}
-    stops = [d for d in destinations if d.available]
-    safe = []
-    for i, d in enumerate(stops):
-        nd = net.nodes[d.node_id]
-        label = d.name.replace("Safe area ", "Safe stop ")
-        if "Node " in label or "(" in label:
-            label = f"Safe stop {chr(65 + i % 26)}"
-        safe.append({"node": nidx[d.node_id], "name": label, "cap": d.capacity, "lon": nd.lon, "lat": nd.lat, "lost": None})
-    view = view_for(net, [(net.nodes[d.node_id].lat, net.nodes[d.node_id].lon) for d in stops])
-    data = {"graph": graph, "safe": safe, "closures": [], "bombs": [], "view": view, "synthetic": net.is_synthetic,
-            "scenario": scenario_id}
-    return (SAFE_TEMPLATE.read_text(encoding="utf-8").replace("__CORE__", CORE.read_text(encoding="utf-8"))
             .replace("__DATA__", json.dumps(data, separators=(",", ":"))))
