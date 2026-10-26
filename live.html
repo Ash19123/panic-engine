@@ -69,7 +69,7 @@ input[type=range]{accent-color:#fff;flex:1;min-width:120px}
 .row label{display:flex;gap:4px;align-items:center;color:#ccc}
 #ctl small{color:var(--mut);display:block;margin-top:4px;line-height:1.35}
 @media(max-width:900px){#root{flex-direction:column;height:auto}#mapcol{height:560px;flex:none}#side{flex:none;overflow:visible}}
-</style></head><body><a href="index.html" style="position:fixed;right:12px;bottom:12px;z-index:99999;background:#2b5c9e;color:#fff;font:600 13px Segoe UI,Arial,sans-serif;padding:8px 14px;border-radius:20px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.4)">&larr; About this project</a><div id="root">
+</style></head><body><a href="index.html" style="position:fixed;right:12px;bottom:12px;z-index:99999;background:#2b5c9e;color:#fff;font:600 13px Segoe UI,Arial,sans-serif;padding:8px 14px;border-radius:20px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.4)">&larr; About this project</a><a href="index.html#fullapp" style="position:fixed;right:12px;bottom:56px;z-index:99999;background:#1c2a44;color:#fff;font:600 12px Segoe UI,Arial,sans-serif;padding:7px 12px;border-radius:20px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.4)">Compare strategies, speed and path: run the full app</a><div id="root">
 <div id="mapcol">
  <div id="stage"></div>
  <div class="hud" id="top">
@@ -9321,7 +9321,7 @@ function applyState(s){if(!s||(s.run!==null&&s.run!==undefined&&s.run!==D.run))r
  tEnd=P.some(p=>p.manual)?tmaxData+1800:tmaxData;updateCtl();}
 if(D.sync){push();setInterval(async()=>{try{if(owner===ME)push();else{const r=await fetch(D.sync);applyState(await r.json());setConn(true);}}catch(e){setConn(false);}},400);}
 /* fit the iframe to the visible window so the whole page is visible without scrolling the page itself */
-function fitFrame(){try{const fe=window.frameElement;if(!fe)return;const top=fe.getBoundingClientRect().top,avail=window.parent.innerHeight-Math.max(0,top)-18;
+function fitFrame(){try{const fe=window.frameElement;if(!fe){const h=Math.max(520,window.innerHeight-16);if($('root').style.height!==h+'px'){$('root').style.height=h+'px';window.dispatchEvent(new Event('resize'));}return;}const top=fe.getBoundingClientRect().top,avail=window.parent.innerHeight-Math.max(0,top)-18;
  const h=Math.max(520,Math.min(900,Math.round(avail)));fe.style.height=h+'px';for(let e=fe.parentElement,i=0;e&&i<2;e=e.parentElement,i++){e.style.height=h+'px';e.style.minHeight='0';}$('root').style.height=h+'px';window.dispatchEvent(new Event('resize'));}catch(e){}}
 try{window.parent.addEventListener('resize',fitFrame);}catch(e){}setTimeout(fitFrame,60);setTimeout(fitFrame,600);
 requestAnimationFrame(tick);

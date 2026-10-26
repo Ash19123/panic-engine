@@ -331,7 +331,7 @@ function applyState(s){if(!s||(s.run!==null&&s.run!==undefined&&s.run!==D.run))r
  tEnd=P.some(p=>p.manual)?tmaxData+1800:tmaxData;updateCtl();}
 if(D.sync){push();setInterval(async()=>{try{if(owner===ME)push();else{const r=await fetch(D.sync);applyState(await r.json());setConn(true);}}catch(e){setConn(false);}},400);}
 /* fit the iframe to the visible window so the whole page is visible without scrolling the page itself */
-function fitFrame(){try{const fe=window.frameElement;if(!fe)return;const top=fe.getBoundingClientRect().top,avail=window.parent.innerHeight-Math.max(0,top)-18;
+function fitFrame(){try{const fe=window.frameElement;if(!fe){const h=Math.max(520,window.innerHeight-16);if($('root').style.height!==h+'px'){$('root').style.height=h+'px';window.dispatchEvent(new Event('resize'));}return;}const top=fe.getBoundingClientRect().top,avail=window.parent.innerHeight-Math.max(0,top)-18;
  const h=Math.max(520,Math.min(__HEIGHT__,Math.round(avail)));fe.style.height=h+'px';for(let e=fe.parentElement,i=0;e&&i<2;e=e.parentElement,i++){e.style.height=h+'px';e.style.minHeight='0';}$('root').style.height=h+'px';window.dispatchEvent(new Event('resize'));}catch(e){}}
 try{window.parent.addEventListener('resize',fitFrame);}catch(e){}setTimeout(fitFrame,60);setTimeout(fitFrame,600);
 requestAnimationFrame(tick);

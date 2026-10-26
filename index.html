@@ -98,7 +98,7 @@ h3.rh{margin:34px 0 6px;color:var(--navy);font-size:20px}
 </head>
 <body>
 <nav><div class="wrap"><b>PANIC ENGINE</b>
-<div><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#results">Results</a><a href="#phone">Phone</a><a href="#inspiration">Inspiration</a><a href="https://github.com/Ash19123/panic-engine">Code</a></div></div></nav>
+<div><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#results">Results</a><a href="#phone">Phone</a><a href="#fullapp">Full app</a><a href="#inspiration">Inspiration</a><a href="https://github.com/Ash19123/panic-engine">Code</a></div></div></nav>
 
 <header class="hero"><div class="wrap">
 <span class="pill">Agent-based evacuation simulator &middot; Amrita Vishwa Vidyapeetham, Amaravati</span>
@@ -168,6 +168,16 @@ h3.rh{margin:34px 0 6px;color:var(--navy);font-size:20px}
 </div></div></div></section>
 
 
+
+<section id="fullapp"><div class="wrap">
+<h2>Run the full app</h2>
+<p class="sub">This page replays one saved run. Changing the walking speed or path, comparing all three strategies and counting deaths need the Streamlit app, which runs on your own computer.</p>
+<div class="panel"><pre style="margin:0;white-space:pre-wrap;font-size:14px">git clone https://github.com/Ash19123/panic-engine
+cd panic-engine
+pip install -r requirements.txt
+streamlit run app.py</pre>
+<p style="margin-top:12px">At the top of the app: pick the <b>path</b> (routing strategy), set the <b>walking speed</b>, press <b>RUN</b> or <b>COMPARE ALL 3</b>, and open the <b>PHONE</b> button for the QR code.</p></div>
+</div></section>
 
 <section id="inspiration" class="alt"><div class="wrap">
 <h2>Inspiration</h2>

@@ -118,7 +118,10 @@ def build(run_id: int, out: Path) -> None:  # write the site files for one store
                               sync_url=None, run_id=run_id)  # no phone server on a static site (part 3)
     back = ('<a href="index.html" style="position:fixed;right:12px;bottom:12px;z-index:99999;background:#2b5c9e;color:#fff;'  # a floating link (part 1)
             'font:600 13px Segoe UI,Arial,sans-serif;padding:8px 14px;border-radius:20px;text-decoration:none;'  # (part 2)
-            'box-shadow:0 4px 14px rgba(0,0,0,.4)">&larr; About this project</a>')  # link back to the landing page
+            'box-shadow:0 4px 14px rgba(0,0,0,.4)">&larr; About this project</a>'  # (part 3)
+            '<a href="index.html#fullapp" style="position:fixed;right:12px;bottom:56px;z-index:99999;background:#1c2a44;color:#fff;'  # second link (part 1)
+            'font:600 12px Segoe UI,Arial,sans-serif;padding:7px 12px;border-radius:20px;text-decoration:none;'  # (part 2)
+            'box-shadow:0 4px 14px rgba(0,0,0,.4)">Compare strategies, speed and path: run the full app</a>')  # points to the instructions  # link back to the landing page
     live = live.replace("<body>", "<body>" + back, 1) if "<body>" in live else live  # inject it right after <body>
     phone = lv.build_phone_html(net, bundle, cfg.destinations, cfg.params.hazards, cfg.closures, run_id, sync_url=None)  # mobile page, no dashboard to sync with
     out.mkdir(parents=True, exist_ok=True)  # make sure the output folder exists
