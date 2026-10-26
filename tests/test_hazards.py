@@ -96,3 +96,22 @@ def test_migration_v1_to_v2_preserves_existing_data(tmp_path):  # upgrading an o
     cols = [r[1] for r in conn.execute("PRAGMA table_info(agents)")]  # columns of the agents table
     assert "alert_time_seconds" in cols  # the new column exists
     conn.close()  # close it
+
+
+def test_routes_avoid_roads_inside_a_blast_radius():  # nobody should walk towards the bomb on the way out
+    from simulation.congestion import CongestionState  # live road state
+    from simulation.models import ModelParams  # model parameters
+    from simulation.routing import Router  # route finder
+    from geo import geographic_utils as geo  # offset helper
+    from tests.helpers import LAT, LON, make_net  # tiny test network
+    coords = {1: geo.offset_latlon(LAT, LON, 0, -100), 2: (LAT, LON), 4: geo.offset_latlon(LAT, LON, 0, 100), 3: geo.offset_latlon(LAT, LON, 400, 0)}  # 1 and 4 flank the bomb at 2; 3 is a far detour
+    net = make_net([(1, 2, 100, 50), (2, 4, 100, 50), (1, 3, 150, 50), (3, 4, 150, 50)], coords=coords)  # short road through the bomb, longer road round it
+    hz = [{"name": "b", "node": 2, "lat": LAT, "lon": LON, "blast_radius_m": 120.0, "alert_radius_m": 400.0, "strike_time_s": 300.0, "alert_time_s": 100.0}]  # one bomb at node 2
+    for strategy in ("SHORTEST_PATH", "CONGESTION_AWARE"):  # the rule applies to every strategy
+        aware = ModelParams(hazards=hz)  # default: avoid the blast area
+        blind = ModelParams(hazards=hz, hazard_avoid_penalty_s=0.0)  # old behaviour: ignore the bomb
+        r_aware = Router(net, CongestionState(net, aware), strategy, aware).route_from(1, 4, 0.0)  # route from 1 to 4
+        r_blind = Router(net, CongestionState(net, blind), strategy, blind).route_from(1, 4, 0.0)  # same without the rule
+        nodes = lambda r: {net.edges[e].target for e in r[1]}  # nodes reached along the route
+        assert 2 in nodes(r_blind) and 3 not in nodes(r_blind)  # blind routing cuts through the bomb
+        assert 3 in nodes(r_aware) and 2 not in nodes(r_aware)  # aware routing walks round it

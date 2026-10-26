@@ -41,15 +41,20 @@ class Router:  # finds routes to safe stops
         self._cache: Dict[int, Tree] = {}  # computed trees by destination node
         self._cache_key: Optional[Tuple[int, int]] = None  # (closure epoch, time bucket) the cache belongs to
         self.search_count = 0     # number of Dijkstra runs (performance diagnostics)
+        self._avoid_s = float(params.hazard_avoid_penalty_s)  # extra cost of walking a road that a bomb will destroy
+        self._avoid = set()  # roads inside the blast radius of a bomb (known from the alert)
+        for h in params.hazards:  # every bomb of the scenario
+            self._avoid.update(network.edges_within(h["lat"], h["lon"], h["blast_radius_m"]))  # its blast roads
 
     @property
     def dynamic(self) -> bool:  # does this strategy react to congestion?
         return self.strategy != "SHORTEST_PATH"  # everything except plain shortest path does
 
     def edge_cost(self, edge_id: int) -> Optional[float]:  # cost of one road under this strategy
-        if self.dynamic:  # congestion-aware family
-            return self.state.congestion_cost(edge_id)  # includes crowding and queues
-        return self.state.free_flow_cost(edge_id)  # plain walking time
+        c = self.state.congestion_cost(edge_id) if self.dynamic else self.state.free_flow_cost(edge_id)  # crowding-aware or plain walking time
+        if c is not None and edge_id in self._avoid:  # a road the alert says will be destroyed
+            c += self._avoid_s  # people avoid walking towards the bomb, but may still use it to get out
+        return c  # None means the road is closed
 
     def _weight(self, u: int, v: int, parallel: dict) -> Optional[float]:  # networkx weight callback for a node pair
         best = None  # cheapest usable road so far

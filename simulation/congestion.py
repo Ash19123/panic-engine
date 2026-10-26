@@ -14,7 +14,12 @@ import math  # maths helpers
 from collections import defaultdict  # dictionaries with automatic default values
 from typing import Dict, Optional, Set  # type hints
 
+from config import settings  # the walking speed the stored road times were built with
 from simulation.models import Edge, ModelParams, RoadNetwork  # road, parameters, road graph
+
+
+def free_flow_time(edge: Edge, params: ModelParams) -> float:  # walking time of an empty road at the scenario's walking speed
+    return edge.free_flow_time_s * (settings.WALKING_SPEED_MPS / max(0.1, params.walking_speed_mps))  # stored time was built at the default speed
 
 
 def effective_capacity(edge: Edge, params: ModelParams) -> int:  # capacity after any scenario override
@@ -23,7 +28,7 @@ def effective_capacity(edge: Edge, params: ModelParams) -> int:  # capacity afte
 
 def bpr_travel_time(edge: Edge, occupancy: int, capacity: int, params: ModelParams) -> float:  # time to walk a road under load
     ratio = occupancy / capacity  # how full the road is
-    return edge.free_flow_time_s * (1.0 + params.bpr_alpha * ratio ** params.bpr_beta)  # t0 * (1 + alpha * r^beta)
+    return free_flow_time(edge, params) * (1.0 + params.bpr_alpha * ratio ** params.bpr_beta)  # t0 * (1 + alpha * r^beta)
 
 
 class CongestionState:  # tracks how busy every road is during a run
@@ -70,7 +75,7 @@ class CongestionState:  # tracks how busy every road is during a run
         """Baseline edge weight: free-flow walking time (seconds). None = unusable."""
         if edge_id in self.closed:  # closed road
             return None  # routing must skip it
-        return self.network.edges[edge_id].free_flow_time_s  # plain walking time
+        return free_flow_time(self.network.edges[edge_id], self.params)  # plain walking time
 
     def congestion_cost(self, edge_id: int) -> Optional[float]:  # cost used by congestion-aware routing
         """Congestion-aware weight (seconds), strictly positive:
@@ -87,8 +92,9 @@ class CongestionState:  # tracks how busy every road is during a run
         cap = self.capacity[edge_id]  # its capacity
         r = self.occupancy[edge_id] / cap  # how full it is
         p = self.params  # shorthand for the parameters
-        travel = e.free_flow_time_s * (1.0 + p.bpr_alpha * r ** p.bpr_beta)  # slowed walking time
-        wait = p.queue_penalty_gamma * self.queue[edge_id] * e.free_flow_time_s / cap  # expected wait behind the queue
+        t0 = free_flow_time(e, p)  # empty-road walking time
+        travel = t0 * (1.0 + p.bpr_alpha * r ** p.bpr_beta)  # slowed walking time
+        wait = p.queue_penalty_gamma * self.queue[edge_id] * t0 / cap  # expected wait behind the queue
         return travel + wait  # total expected cost in seconds
 
     def severe(self, edge_id: int, threshold: float = 0.9) -> bool:  # is the road nearly full?

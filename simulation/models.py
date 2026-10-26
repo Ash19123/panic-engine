@@ -235,6 +235,7 @@ class ModelParams:  # tunable model settings
     max_snapshot_agents: int = 2000  # cap on agents stored per frame
     edge_capacity_overrides: Dict[int, int] = field(default_factory=dict)  # road id -> capacity override
     walking_speed_mps: float = 1.4  # walking speed
+    hazard_avoid_penalty_s: float = 600.0  # extra route cost of a road inside a bomb's blast radius (0 = hazard-blind routing)
     # Bomb / blast hazards (simulated emergency-alert drill). Each: {name, node, lat, lon, blast_radius_m,
     # alert_radius_m, strike_time_s, alert_time_s}. People inside an alert radius get a phone alert at alert_time_s;
     # at strike_time_s roads/safe areas inside the blast radius are lost and anyone still inside is caught.

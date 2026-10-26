@@ -95,3 +95,13 @@ def test_load_balanced_uses_multiple_destinations():  # the central planner spre
     cfg = make_cfg(net, [1], [(10, 2, 50, 50), (11, 3, 50, 50)], strategy="LOAD_BALANCED", agents=40)  # 40 people
     res = EvacuationSimulation(net, cfg).run()  # run it
     assert {a.destination_id for a in res.agents} == {10, 11} and res.metrics["evacuated"] == 40  # both stops are used
+
+
+def test_walking_speed_setting_changes_travel_time():  # the walking speed parameter must actually be used
+    net = diamond()  # test network
+    slow = EvacuationSimulation(net, make_cfg(net, [1], [(10, 4, 100, 100)], agents=10, walking_speed_mps=0.7)).run()  # half the default speed
+    fast = EvacuationSimulation(net, make_cfg(net, [1], [(10, 4, 100, 100)], agents=10, walking_speed_mps=2.8)).run()  # double the default speed
+    t_slow = min(a.evacuation_time for a in slow.agents)  # quickest person when walking slowly
+    t_fast = min(a.evacuation_time for a in fast.agents)  # quickest person when walking fast
+    assert abs(t_slow - 200 / 0.7) < 15.0 and abs(t_fast - 200 / 2.8) < 15.0  # free-flow time = distance / speed (within the timestep rounding of two roads)
+    assert t_slow > 3.0 * t_fast  # four times the speed, about a quarter of the time
