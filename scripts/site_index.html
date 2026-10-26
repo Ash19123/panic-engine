@@ -78,18 +78,33 @@ h2{font-size:30px;color:var(--blue);margin:0 0 8px;letter-spacing:-.01em}
 ul.tick{margin:0;padding-left:20px;color:var(--mute)}
 footer{background:var(--navy);color:#aebbd0;padding:34px 0;font-size:14px}
 footer a{color:#cfe0f8}
+/* phone section */
+.phonebox{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center}
+.phoneframe{width:330px;height:620px;border:10px solid #101827;border-radius:38px;overflow:hidden;background:#000;box-shadow:0 18px 40px rgba(16,24,39,.35)}
+.phoneframe iframe{width:100%;height:100%;border:0;display:block}
+.phoneside h3{margin:0 0 10px;color:var(--navy)}
+.qr{display:block;background:#fff;padding:8px;border:1px solid var(--line);border-radius:10px;margin:0 0 14px}
+/* result tables */
+.rt{width:100%;border-collapse:collapse;font-size:15px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.rt th,.rt td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.rt th{background:var(--panel);color:var(--navy);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.rt td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.rt tr:last-child td{border-bottom:0}
+.bad{color:#b3261e;font-weight:700}.good{color:#157a4b;font-weight:700}
+h3.rh{margin:34px 0 6px;color:var(--navy);font-size:20px}
+@media(max-width:820px){.phonebox{grid-template-columns:1fr;justify-items:center}.rt{font-size:13px}.rt th,.rt td{padding:8px 8px}}
 @media(max-width:640px){nav a{margin-left:12px;font-size:13px}.bar label{width:96px}.problem{padding:24px}}
 </style>
 </head>
 <body>
 <nav><div class="wrap"><b>PANIC ENGINE</b>
-<div><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#results">Results</a><a href="#inspiration">Inspiration</a><a href="https://github.com/Ash19123/panic-engine">Code</a></div></div></nav>
+<div><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#results">Results</a><a href="#phone">Phone</a><a href="#inspiration">Inspiration</a><a href="https://github.com/Ash19123/panic-engine">Code</a></div></div></nav>
 
 <header class="hero"><div class="wrap">
 <span class="pill">Agent-based evacuation simulator &middot; Amrita Vishwa Vidyapeetham, Amaravati</span>
 <h1>Who reaches safety in time?</h1>
 <p class="lead">PANIC ENGINE simulates a crowd evacuating a real campus road map after a warning. It tests how routing and warning time change the outcome.</p>
-<div class="btns"><a class="btn p" href="live.html">Open the live 3D demo</a><a class="btn s" href="https://github.com/Ash19123/panic-engine">View the source</a></div>
+<div class="btns"><a class="btn p" href="live.html">Open the live 3D demo</a><a class="btn s" href="phone.html">Open the phone app</a><a class="btn s" href="https://github.com/Ash19123/panic-engine">View the source</a></div>
 <div class="frame"><div class="top"><i></i><i></i><i></i></div><img src="hero.jpg" alt="Live 3D replay: roads, safe stops in green, blast area in red, and a simulated phone showing the route to the nearest safe stop"></div>
 <p class="cap">A saved run on the real OpenStreetMap campus network: 250 people, a blast area (red), the alert area (amber) and hypothetical safe stops (green).</p>
 </div></header>
@@ -130,26 +145,29 @@ footer a{color:#cfe0f8}
 <p class="sub">One Streamlit app, plus a live replay you can open here.</p>
 <div class="grid g3">
 <div class="card"><div class="ico">3D</div><h3>Live 3D replay</h3><p>Watch people leave, queue and reach safe stops on the real map, then see the blast.</p></div>
-<div class="card"><div class="ico">&#9742;</div><h3>Phone view</h3><p>A simulated phone shows the alarm, the nearest safe stop, the route and live tracking. You can take control of one person.</p></div>
+<div class="card"><div class="ico">&#9742;</div><h3>Phone view</h3><p>A phone page shows the alarm, the nearest safe stop, the route and live tracking. <a href="phone.html">Open it</a> or scan the QR code below.</p></div>
 <div class="card"><div class="ico">&#8644;</div><h3>Strategy comparison</h3><p>Shortest path, congestion-aware and load-balanced routing on identical crowds.</p></div>
 <div class="card"><div class="ico">&#9201;</div><h3>Lead-time experiment</h3><p>Change how early the alert comes and see how many are safe before the strike.</p></div>
 <div class="card"><div class="ico">SQL</div><h3>SQL analytics</h3><p>A query catalogue, a read-only console and nine integrity checks.</p></div>
-<div class="card"><div class="ico">&#10003;</div><h3>Verified</h3><p>80 tests, plus a check that the same seed gives the same result.</p></div>
+<div class="card"><div class="ico">&#10003;</div><h3>Verified</h3><p>78 automated tests, plus a check that the same seed gives the same result.</p></div>
 </div></div></section>
 
-<section id="results"><div class="wrap">
-<h2>What we saw</h2>
-<p class="sub">Routing that avoids crowded roads got more people to safety than everyone taking the shortest path.</p>
-<div class="bars">
-<div class="row"><h3>Synthetic grid, normal scenario</h3>
-<div class="bar"><label>Shortest path</label><div class="track"><div class="fill a" style="width:84%">about 84%</div></div></div>
-<div class="bar"><label>Congestion-aware</label><div class="track"><div class="fill b" style="width:98%">98 to 99%</div></div></div></div>
-<div class="row"><h3>Campus map (6,916 nodes), one run</h3>
-<div class="bar"><label>Shortest path</label><div class="track"><div class="fill a" style="width:81%">81%</div></div></div>
-<div class="bar"><label>Congestion-aware</label><div class="track"><div class="fill b" style="width:100%">100%</div></div></div></div>
-</div>
-<p class="cap">Share of people who reached a safe stop. These are single runs of an educational model with assumed walking speeds, capacities and reaction delays. They show direction, not real-world prediction.</p>
-</div></section>
+<!--RESULTS-->
+
+<section id="phone" class="alt"><div class="wrap">
+<h2>The phone app</h2>
+<p class="sub">Open it on your phone or try it right here. It shows the alarm, the walking route to the nearest safe stop and live tracking.</p>
+<div class="phonebox">
+<div class="phoneframe"><iframe src="phone.html" title="PANIC ENGINE phone view" loading="lazy"></iframe></div>
+<div class="phoneside">
+<h3>Scan to open on your phone</h3>
+<img class="qr" src="__PHONE_QR__" alt="QR code for the phone view" width="180" height="180">
+<p>Or open <a href="phone.html">phone.html</a>. Pick a person, press PLAY, and when the alert arrives follow the route. Tap TAKE CONTROL to walk that person yourself with the arrow pad.</p>
+<p><a class="btn p" href="phone.html">Open the phone view</a></p>
+<p class="cap" style="text-align:left">On your own computer the dashboard also mirrors the phone live: press the PHONE button at the top of the app.</p>
+</div></div></div></section>
+
+
 
 <section id="inspiration" class="alt"><div class="wrap">
 <h2>Inspiration</h2>
@@ -167,7 +185,7 @@ footer a{color:#cfe0f8}
 <li>This is an educational model. It is not a real alert system and cannot send a message to anyone.</li>
 <li>It is not validated against real evacuations. Speeds, capacities and delays are assumptions.</li>
 <li>Safe stops are hypothetical, not official shelters.</li>
-<li>The blast is a radius rule only. No injuries or casualties are modelled or shown.</li>
+<li>The blast is a radius rule only. People still inside it at the strike are counted as simulated casualties. These are counts in a model, not predictions of real harm.</li>
 </ul></div>
 </div></section>
 

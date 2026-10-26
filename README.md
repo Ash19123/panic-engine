@@ -24,9 +24,11 @@ either real OpenStreetMap roads (cached, offline-capable) or a clearly labelled 
 
 ## 2. Problem statement
 
-In an emergency the route that is shortest for one person becomes slow when everyone chooses it. Road closures, limited exits
-and uneven crowd distribution change the outcome. We ask: *under explicit, documented assumptions, how do routing strategies
-differ in evacuation completion, time, waiting and bottlenecks, and which conditions drive the difference?*
+When an alert goes out, everyone is told to move to a safe place at the same moment. They pick the nearest exits and the same
+roads, queues form, and some people run out of time before the strike. We ask: *how should people be routed, and how much warning
+time is needed, so that most reach safety in time?* In the simulation everyone receives the alert on their phone, so the question
+is about routing and warning time, not about who is reached. Under explicit, documented assumptions we compare three routing
+strategies on identical crowds and report how many people reach safety and how many are caught in the blast.
 
 ## 3. Objectives
 
@@ -48,9 +50,9 @@ differ in evacuation completion, time, waiting and bottlenecks, and which condit
 | Routing | `SHORTEST_PATH`, `CONGESTION_AWARE`, `LOAD_BALANCED` (centralised planner) |
 | SQL | 18 tables, FKs, CHECKs, indexes, versioned migrations, transactional persistence, 12+ analytical queries incl. window functions |
 | Analysis | bottleneck detection with configurable thresholds, nine integrity checks, reproducibility check, paired + intervention comparisons, edge-level congestion diff |
-| Dashboard | One page, four tabs (`app.py`): **Live simulation** (deck.gl 3-D map replayed in the browser, simulated phone, tracked people, manual control), **Analytics**, **Strategies** (paired runs, counterfactual lab, alert lead-time experiment), **SQL** (all queries, read-only console, integrity checks). Sidebar: map, simulation, bomb areas, danger zones, people |
-| Real phone view | `visualization/phone_server.py` starts a small LAN server (port 8765) when the app starts. A phone on the same Wi-Fi opens `http://<PC address>:8765/phone` (QR code under **PHONE VIEW** on the Live tab) and gets the alert screen, safe-stop route, mini-map and D-pad. Clock, selected person, names and the manual avatar stay in sync with the dashboard in both directions |
-| Bomb alert drill | Bomb areas (blast radius, larger alert radius, strike time, warning lead time). At the alert time every phone inside the alert area gets an emergency alert; people react and walk to the nearest safe stop; at the strike roads/safe stops inside the blast radius are lost and anyone still inside is counted as *caught* (not depicted). Events `ALERT_SENT` / `HAZARD_STRIKE` are stored in SQL |
+| Dashboard | One page, four tabs (`app.py`): **Live simulation** (deck.gl 3-D map replayed in the browser, simulated phone, tracked people, manual control), **Analytics**, **Strategies** (paired runs, counterfactual lab, alert lead-time experiment), **SQL** (all queries, read-only console, integrity checks). **Quick controls at the top of the page**: path (routing strategy), walking speed, **RUN**, **COMPARE ALL 3** (runs the three strategies on the same crowd and tabulates who reached safety and who was caught) and **PHONE**. Sidebar: map, simulation, bomb areas, danger zones, people |
+| Real phone view | `visualization/phone_server.py` starts a small LAN server (port 8765) when the app starts. A phone on the same Wi-Fi opens `http://<PC address>:8765/phone` (QR code under the **PHONE** button at the top of the page) and gets the alert screen, safe-stop route, mini-map and D-pad. Clock, selected person, names and the manual avatar stay in sync with the dashboard in both directions |
+| Bomb alert drill | Bomb areas (blast radius, larger alert radius, strike time, warning lead time). At the alert time every phone inside the alert area gets an emergency alert; people react and walk to the nearest safe stop; at the strike roads/safe stops inside the blast radius are lost and anyone still inside is counted as *caught* (a simulated death in the results; nothing graphic is drawn). Events `ALERT_SENT` / `HAZARD_STRIKE` are stored in SQL |
 | Alert channels + planner | Not everybody has a phone at hand. People are warned by **phone** (a chosen share), **siren** (radius around placed sirens) or a **neighbour** relay; people nobody reaches never start moving. The *Strategies → Alert planner* tab runs four paired simulations (phones only / + sirens / + neighbours / everyone has a phone), recommends siren sites for the people the phones missed (greedy max-coverage, outside the blast radius) and reports who was never alerted, safe before the blast and caught. The channel of each person is stored in SQL (`agents.alert_channel`) |
 | Phone + person control | Per tracked person: alarm screen (siren, vibration, countdown), nearest safe stop with walking distance/time, live mini-map with route, trail and position. People can be renamed, followed, pointed at a specific safe stop, or taken over and walked with arrow keys / WASD / D-pad (what-if avatars; they do not change the stored run) |
 | Scripts | `download_network`, `run_benchmarks`, `export_report` |
@@ -283,27 +285,52 @@ streamlit run app.py
 ### Phone view on a real phone
 
 1. Start the app (`streamlit run app.py`); the phone server starts with it.
-2. Live tab → **PHONE VIEW** → scan the QR code (or type the address) on a phone on the **same Wi-Fi**.
+2. Top of the page → **PHONE** → scan the QR code (or type the address) on a phone on the **same Wi-Fi**.
 3. If Windows asks, allow Python through the firewall (private networks). If nothing loads, check that the PC and phone are on the same network and that port 8765 is not blocked.
 4. Press **PLAY** on either device: both follow one clock. **TAKE CONTROL** on the phone moves the person on the dashboard too.
 5. Sound and vibration need a first tap on the phone page (browser rule); some browsers vibrate only over HTTPS.
 
-## 13. Screenshots
+## Results: three routing strategies on identical crowds
 
-*(Placeholders – capture after running locally.)*
+Generated by `python -m scripts.compare_strategies` (stored in `scripts/results/`). Every strategy sees the *same* 250 people, start points and seed; figures are mean ± standard deviation over 10 random crowds. They come from an educational model with assumed speeds, capacities and delays, so they compare strategies *inside the model*; they do not predict a real emergency.
 
-| Page | Screenshot |
-|---|---|
-| Overview | `docs/screenshots/overview.png` *(not captured)* |
-| Live Simulation | `docs/screenshots/live.png` *(not captured)* |
-| Congestion and Bottlenecks | `docs/screenshots/congestion.png` *(not captured)* |
-| Strategy Comparison / Counterfactual Lab | `docs/screenshots/compare.png` *(not captured)* |
+**Bomb drill on the campus map** (blast 150 m, strike at 420 s, alert 180 s before the strike, up to 90 s reaction delay):
+
+| Routing | Reached safety | Caught in blast (simulated deaths) | Median time to safety |
+|---|---|---|---|
+| Shortest path | 93.5% ± 1.9 | 6.5% ± 1.9 (16 of 250) | 747 s ± 42 |
+| Congestion-aware | 94.1% ± 1.8 | 5.9% ± 1.8 (15 of 250) | 732 s ± 30 |
+| Load-balanced | 94.2% ± 1.8 | 5.8% ± 1.8 (15 of 250) | 733 s ± 29 |
+
+**Deaths against warning time** (people caught inside the blast radius at the strike):
+
+| Routing | 60 s warning | 180 s | 300 s | 400 s |
+|---|---|---|---|---|
+| Shortest path | 21.3% ± 4.0 | 6.5% ± 1.9 | 0.0% ± 0.0 | 0.0% ± 0.0 |
+| Congestion-aware | 20.8% ± 4.0 | 5.9% ± 1.8 | 0.0% ± 0.0 | 0.0% ± 0.0 |
+| Load-balanced | 20.8% ± 4.0 | 5.8% ± 1.8 | 0.0% ± 0.0 | 0.0% ± 0.0 |
+
+**Crowd stress test** (no bomb, everyone leaves at once; share reaching a safe stop within 30 min):
+
+| Routing | Synthetic grid (300 people) | Campus map (250 people) |
+|---|---|---|
+| Shortest path | 60.7% ± 0.2 | 94.0% ± 0.0 |
+| Congestion-aware | 78.1% ± 1.7 | 100.0% ± 0.0 |
+| Load-balanced | 78.0% ± 1.7 | 100.0% ± 0.0 |
+
+What this shows: warning time decides the death toll; the routing rule barely changes it in the bomb drill (the people at risk just need to walk out of the blast area); routing matters when the crowd itself is the bottleneck.
+
+## 13. Screenshot and live demo
+
+![Live 3D replay](hero.jpg)
+
+The published site has the live 3D replay and the phone app: https://ash19123.github.io/panic-engine/ (live demo: `live.html`, phone: `phone.html`).
 
 ## 14. Verification status
 
 Verified for this revised copy in the available development runtime:
 
-* `python -m pytest` → **tests pass (see `python -m pytest`)**: simulation, SQL integrity, routing, capacities, reproducibility, geo conversion, hazard
+* `python -m pytest` → **all tests pass** (run `python -m pytest` for the current count): simulation, SQL integrity, routing, capacities, reproducibility, geo conversion, hazard
   alerts / blast / migration v1→v2, the Streamlit page (Run button, bomb run, one-click demo), the live-view payload and a **Node
   unit test of the live page's route finder and manual-walk logic** (compared against an independent Dijkstra; skipped without Node).
 * Browser-checked on the synthetic grid and on a cached 6 km campus-area OpenStreetMap network (6 916 nodes): threat banner,
@@ -311,6 +338,8 @@ Verified for this revised copy in the available development runtime:
   roster statuses and manual walking.
 * In a first draft the phone's route finder showed "no route" for some people because distances were stored as float32 and
   compared with float64 heap values; fixed (Float64) and covered by the Node test.
+* Fixed in this revision: (1) `ModelParams.walking_speed_mps` was stored but never used, so the walking speed could not be changed; the engine now scales every road's free-flow time by it (test added) and the app has a walking-speed slider. (2) Routing ignored the bomb: congestion-aware re-planning could walk people *through* the blast site seconds before the strike (about 4-8% of the crowd caught at long warning times); every strategy now adds a penalty to roads inside a blast radius (`hazard_avoid_penalty_s`, test added). (3) The campus-map percentages formerly quoted on the site were not backed by saved runs; they are replaced by the reproducible `scripts/compare_strategies` results above.
+* Randomised check: 120 runs (all three strategies, random bombs, closures, alert channels, crowd sizes 1 to 400, walking speeds 0.6 to 2.5 m/s) kept every conservation rule and passed all nine integrity checks.
 * Fixed earlier: `app.py` called `flow_direction_layer` / `focus_marker_layer`, which did not exist; Carto basemap tiles now require an
   API key (replaced by keyless OpenStreetMap tiles); the road network was re-parsed on every rerun (now cached; playback is client-side).
 * **Not verified here:** a fresh live OpenStreetMap *download* on your machine/network (2-3 km is far more reliable than 6+ km),
@@ -334,7 +363,8 @@ neighbour relay would add, and where sirens would warn the most unreached people
 * No authentication/multi-user support; SQLite allows one writer at a time.
 
 * **Blast model:** a radius rule only (roads inside close, safe stops inside are lost, people inside at the strike are counted).
-  No physics, shock-wave, injuries or casualties are modelled or drawn; "caught" is a counter for how late the alert was.
+  No physics or shock-wave is modelled and nothing graphic is drawn. "Caught" is a head count of people still inside the radius at the
+  strike; the results report it as simulated deaths, a measure of how late the alert was for them. It is not a prediction of real harm.
 * **Alert model:** one broadcast time per bomb, delivered to every phone inside the alert radius at once; reaction delay is a
   uniform random 0..N s. Real alert systems have latency, coverage gaps and people who ignore alerts.
 * Phone guidance uses the shortest walking route avoiding closed roads; simulated people follow the engine's route (which can
