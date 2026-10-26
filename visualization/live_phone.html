@@ -138,7 +138,7 @@ function updateCtl(){const m=P[sel].manual;$('bCtl').textContent=m?'RELEASE':'TA
 /* ---------- sync with the dashboard through the phone server ---------- */
 function setConn(ok){connected=ok;const e=$('conn');e.className=ok?'ok':'off';e.textContent=ok?(owner===ME?'SYNC · YOU':'SYNC'):'LOCAL';}
 function snapshot(){const man={};P.forEach(p=>{if(p.manual)man[p.id]=Object.assign({},p.manual,{trail:p.manual.trail.slice(-300)});});return{owner:ME,run:D.run,t:t,playing:playing,speed:speed,sel:P[sel].id,names:names,manual:man};}
-function push(){fetch(D.sync,{method:'POST',body:JSON.stringify(snapshot())}).then(()=>setConn(true)).catch(()=>setConn(false));}
+function push(){if(!D.sync)return;fetch(D.sync,{method:'POST',body:JSON.stringify(snapshot())}).then(()=>setConn(true)).catch(()=>setConn(false));}
 function claim(){owner=ME;push();}
 function applyState(s){if(!s||(s.run!==null&&s.run!==undefined&&s.run!==D.run))return;if(!s.owner||s.owner===ME)return;owner=null;
  if(s.names){Object.assign(names,s.names);P.forEach(p=>{if(names[p.id])p.name=names[p.id];});buildWho();}
@@ -148,7 +148,7 @@ function applyState(s){if(!s||(s.run!==null&&s.run!==undefined&&s.run!==D.run))r
  playing=!!s.playing;setPlayBtn();
  P.forEach(p=>{const m=s.manual&&s.manual[p.id];if(m)p.manual=m;else if(p.manual)p.manual=null;});
  tEnd=P.some(p=>p.manual)?tmax+1800:tmax;updateCtl();}
-setInterval(async()=>{try{if(owner===ME)push();else{const r=await fetch(D.sync);applyState(await r.json());setConn(true);}}catch(e){setConn(false);}},400);
+setInterval(async()=>{if(!D.sync)return;try{if(owner===ME)push();else{const r=await fetch(D.sync);applyState(await r.json());setConn(true);}}catch(e){setConn(false);}},400);
 /* ---------- UI ---------- */
 function buildWho(){const w=$('who'),cur=w.value;w.innerHTML=P.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('');w.value=cur||String(sel);}
 function select(i,fromSync){sel=i;$('who').value=String(i);guide=null;clearTimeout(alertTimer);const p=P[i];p.shown=false;
@@ -172,7 +172,7 @@ function tick(ts){if(playing){if(lastTs!==null){const prev=t,dt=(ts-lastTs)/1000
   P.forEach((p,pi)=>{if(p.manual){if(isOwner)stepManual(p.manual,t-prev,t);}else{const c=personAt(pi,t),q=p.trail[p.trail.length-1];if(!q||dM(q[0],q[1],c.lon,c.lat)>12)p.trail.push([c.lon,c.lat]);}});}lastTs=ts;}else lastTs=null;
  if(t<lastT-1e-6){P.forEach(p=>{p.trail=[];p.shown=false;p.startDist=null;});}lastT=t;updatePhone(t);requestAnimationFrame(tick);}
 buildWho();if(!P.length){$('hMsg').textContent='No tracked people in this run';}else{select(0,true);}setPlayBtn();
-fetch(D.sync).then(r=>r.json()).then(s=>{applyState(s);setConn(true);}).catch(()=>setConn(false));
+if(D.sync)fetch(D.sync).then(r=>r.json()).then(s=>{applyState(s);setConn(true);}).catch(()=>setConn(false));else setConn(false);
 requestAnimationFrame(tick);
 window.__ph={P,D,get t(){return t;},set t(v){t=v;},play(){playing=true;setPlayBtn();claim();},get owner(){return owner;},get connected(){return connected;}};
 </script></body></html>

@@ -39,6 +39,7 @@ div[data-testid="stMetricLabel"] p { color: #9a9a9a; text-transform: uppercase; 
 .stButton > button:disabled { border-color: #444; color: #555; background: #000; }
 .stButton > button[kind="primary"] { background: #fff; color: #000; }
 .stButton > button[kind="primary"]:hover { background: #d9d9d9; color: #000; }
+.stButton > button[kind="primary"] p, .stButton > button[kind="primary"] span { color: #000 !important; }  /* keep the label dark on the white button, also when the button has a tooltip */
 div[data-baseweb="select"] > div, input, textarea { background: #0b0b0b !important; color: #fff !important; border-color: #2b2b2b !important; }
 span[data-baseweb="tag"] { background:#2b2b2b !important; border:1px solid #777; }
 span[data-baseweb="tag"] * { color:#fff !important; }

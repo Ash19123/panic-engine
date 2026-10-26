@@ -111,6 +111,35 @@ def _trade_offs(df: pd.DataFrame, base: int) -> None:  # explain what is better 
                     "Which matters more depends on the decision-maker's priorities.")  # sentence (part 3)
 
 
+def comparison_table(conn: sqlite3.Connection, ids: dict) -> pd.DataFrame:  # one row per strategy for runs on the same crowd
+    """Outcome of each strategy: reached safety, caught in the blast (simulated deaths), unable, still walking, median time."""
+    rows = []  # one dictionary per strategy
+    for strat, rid in ids.items():  # every compared strategy
+        run = repo.get_run(conn, rid)  # the stored run row
+        h = an.hazard_summary(conn, rid)  # alerts, strike, people caught
+        total = int(run["total_agents"])  # crowd size
+        caught = int(h["caught_in_blast"] or 0) if h["first_strike_s"] is not None else 0  # inside the blast at the strike
+        unable = int(run["failed_agents"]) - caught  # failed for another reason (no route, safe stops full or lost)
+        med = run["median_evacuation_time_seconds"]  # median seconds to safety
+        rows.append({"Strategy": strat.replace("_", " ").title(), "Run": rid, "People": total,  # identity and crowd size
+                     "Reached safety": f"{run['evacuated_agents']} ({100.0 * run['evacuated_agents'] / total:.1f}%)",  # made it to a safe stop
+                     "Caught in blast (simulated deaths)": f"{caught} ({100.0 * caught / total:.1f}%)",  # counted as casualties in the drill
+                     "Unable to evacuate": f"{unable} ({100.0 * unable / total:.1f}%)",  # no route / safe stops full or lost
+                     "Still walking at limit": int(run["unresolved_agents"]),  # time ran out
+                     "Median time to safety": "n/a" if med is None else f"{med:,.0f} s",  # seconds
+                     "_caught": caught, "_safe": int(run["evacuated_agents"])})  # raw numbers for the chart
+    return pd.DataFrame(rows)  # the table
+
+
+def render_comparison(conn: sqlite3.Connection, ids: dict) -> None:  # table and chart for runs on the same crowd
+    df = comparison_table(conn, ids)  # outcomes per strategy
+    st.markdown("##### Same crowd, three routing strategies")  # heading
+    st.dataframe(df.drop(columns=["_caught", "_safe"]), **STRETCH, hide_index=True)  # the table
+    chart = df.set_index("Strategy")[["_safe", "_caught"]].rename(columns={"_safe": "Reached safety", "_caught": "Caught in blast"})  # chart data
+    st.bar_chart(chart, color=["#34D399", "#FF5A4E"])  # green = reached safety, red = caught in the blast
+    st.caption("Same people, same start points, same seed: only the route choice differs. Simulated outcomes of an educational model.")  # honesty note
+
+
 def render_strategies(conn: sqlite3.Connection) -> None:  # the Strategies tab
     t1, t2, t3, t4 = st.tabs(["Compare saved runs", "Counterfactual lab", "Alert lead-time experiment", "Alert planner"])  # four sub-tabs
     scen = repo.list_scenarios(conn)  # all scenarios

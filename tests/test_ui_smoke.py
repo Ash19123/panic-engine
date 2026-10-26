@@ -110,3 +110,27 @@ def test_alert_channels_from_the_sidebar_leave_some_people_unwarned(seeded_db): 
     finally:  # cleanup
         conn.close()  # close the database
     assert rows.get("NONE", 0) > 0 and rows.get("PHONE", 0) > 0  # some were unwarned and some were warned by phone
+
+
+def test_compare_button_runs_all_three_strategies_on_one_crowd(seeded_db):  # COMPARE ALL 3 in the quick-control bar
+    from database.connection import connect  # open the database
+    at = st_testing.AppTest.from_file(str(ROOT / "app.py"), default_timeout=900).run()  # run the page (three simulations: allow time)
+    [s for s in at.sidebar.slider if s.label == "Bomb areas"][0].set_value(1)  # one bomb so deaths are counted
+    at.run()  # re-run with the new value
+    [b for b in at.button if "COMPARE ALL 3" in b.label][0].click()  # press the compare button
+    at.run()  # re-run so the click takes effect
+    assert not at.exception, [e.value for e in at.exception]  # no exception
+    ids = at.session_state["compare_runs"]  # run id per strategy
+    assert set(ids) == {"SHORTEST_PATH", "CONGESTION_AWARE", "LOAD_BALANCED"}  # all three ran
+    conn = connect(seeded_db)  # open the database
+    try:  # always close it
+        scen = {conn.execute("SELECT scenario_id FROM simulation_runs WHERE run_id=?", (r,)).fetchone()[0] for r in ids.values()}  # their scenarios
+    finally:  # cleanup
+        conn.close()  # close the database
+    assert len(scen) == 1  # the SAME scenario, so the same crowd
+
+
+def test_walking_speed_slider_and_phone_button_exist(seeded_db):  # the quick controls are on the main page, not hidden
+    at = st_testing.AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()  # run the page
+    assert any(s.label.startswith("Walking speed") for s in at.slider)  # speed slider on the page
+    assert any("Path" in r.label for r in at.radio)  # path (routing strategy) picker on the page

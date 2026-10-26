@@ -8,12 +8,10 @@ and runs its own SQL queries; repositories.py does the transactional writes.
 """
 # ----------------------------------------------------------------------------- imports
 import json  # JSON text <-> Python objects (scenario descriptions store danger zones as JSON)
-import math  # square roots / trigonometry for map distances
 import sqlite3  # Python's built-in SQLite driver: the project's database engine
 from contextlib import contextmanager  # lets us write a "with open_db() as conn:" helper
 from datetime import datetime  # timestamps used in scenario names
 
-import networkx as nx  # graph library: shortest-path distances over the road network
 import streamlit as st  # the web-app framework that draws this page
 import streamlit.components.v1 as components  # older Streamlit way of embedding custom HTML
 
@@ -23,10 +21,12 @@ from database import repositories as repo  # reads/writes of scenarios, runs, ne
 from geo import geographic_utils as geo  # haversine distance between latitude/longitude points
 from geo import network_cache as cache  # list of OpenStreetMap networks cached on disk
 from geo import network_loader as loader  # OpenStreetMap download + building footprints
-from geo.synthetic_network import build_synthetic_network, default_origins_destinations  # offline fallback map
+from geo.synthetic_network import build_synthetic_network  # offline fallback map
+from simulation import drill  # scenario building shared with the command-line scripts
+from simulation.drill import (candidate_nodes, default_bomb_node, default_layout, make_hazard, node_label,
+                              residents_nodes)  # helpers that pick nodes and build bombs
 from simulation.experiments import run_scenario  # runs the agent simulation and stores the result in SQLite
-from simulation.models import (ClosureSpec, DestinationSpec, ModelParams, OriginSpec, ScenarioConfig,
-                               validate_scenario)  # scenario data classes + validation
+from simulation.models import validate_scenario  # check a scenario before running it
 from visualization import dashboard  # the Analytics / Strategies / SQL tabs
 from visualization import live_view as lv  # builds the browser-side 3-D live replay page
 from visualization import phone_server  # tiny LAN server that serves the page for a real phone
@@ -71,85 +71,6 @@ def open_db():
 
 
 # ----------------------------------------------------------------------------- helpers
-def node_label(net, nid: int) -> str:
-    """Human-readable name of a road-network node (grid position on the synthetic map, coordinates on a real one)."""
-    n = net.nodes[nid]  # the node object (id, latitude, longitude)
-    if net.is_synthetic and net.metadata.get("cols"):  # the synthetic grid knows its number of columns
-        idx = sorted(net.nodes).index(nid)  # position of this node in id order = row-major grid index
-        return f"Grid r{idx // net.metadata['cols'] + 1}-c{idx % net.metadata['cols'] + 1}"  # e.g. "Grid r4-c6"
-    return f"Node {nid} ({n.lat:.4f}, {n.lon:.4f})"  # real map: node id plus rounded coordinates
-
-
-def candidate_nodes(net, keep=(), cell_m: float = 250.0):
-    """Selectable nodes: real networks have thousands, so offer one node per ~250 m cell (plus chosen ones)."""
-    if len(net.nodes) <= 600:  # small network (the synthetic grid): offer every node
-        return sorted(net.nodes)  # all node ids in order
-    s, w, n, e = net.bounds()  # south, west, north, east edges of the network
-    dlat = cell_m / 111_320.0  # cell height in degrees of latitude (1 degree ~ 111.32 km)
-    dlon = cell_m / (111_320.0 * math.cos(math.radians((s + n) / 2)))  # cell width in degrees of longitude at this latitude
-    cells = {}  # (row, column) of a cell -> the first node found inside it
-    for nid in sorted(net.nodes):  # visit nodes in a stable order
-        nd = net.nodes[nid]  # this node
-        cells.setdefault((int((nd.lat - s) / dlat), int((nd.lon - w) / dlon)), nid)  # keep only the first node of each cell
-    return sorted(set(cells.values()) | set(keep))  # one node per cell, plus any node that must stay selectable
-
-
-def default_layout(net):
-    """Hypothetical start point and safe stops (reachable on foot at a moderate distance; not official shelters)."""
-    if net.is_synthetic:  # offline grid: use the demo layout defined with the grid
-        local = build_synthetic_network()  # a fresh copy whose node ids are 1..N
-        to_db = dict(zip(sorted(local.nodes), sorted(net.nodes)))  # map those ids to the ids stored in SQLite
-        origins, dests = default_origins_destinations(local)  # demo start points and safe stops on the grid
-        return [to_db[n] for n, _ in origins], [to_db[d.node_id] for d in dests]  # translated to database node ids
-    c = net.center or ((net.bounds()[0] + net.bounds()[2]) / 2, (net.bounds()[1] + net.bounds()[3]) / 2)  # map centre (or the middle of its bounding box)
-    origin = net.nearest_node(*c)  # start point = the road node closest to the centre
-    o = net.nodes[origin]  # its coordinates
-    reachable = nx.single_source_dijkstra_path_length(net.forward_graph(), origin, weight="length", cutoff=3000)  # walking distance (m) to every node within 3 km, following one-way rules
-    target = min(1000.0, 0.6 * max(reachable.values(), default=1000.0))  # aim for safe stops about 1 km away (less on a small map)
-    best = {0: None, 1: None, 2: None}  # best candidate in each of three directions (sectors)
-    for nid, dist in reachable.items():  # look at every reachable node
-        if nid == origin:  # the start itself cannot be its own safe stop
-            continue  # skip it
-        n = net.nodes[nid]  # this candidate node
-        k = int(((math.atan2(n.lat - o.lat, n.lon - o.lon) + math.pi) / (2 * math.pi)) * 3) % 3  # which third of the compass it lies in
-        gap = abs(dist - target)  # how far its distance is from the 1 km target
-        if best[k] is None or gap < best[k][0]:  # closer to the target than the current best in that sector?
-            best[k] = (gap, nid)  # remember it
-    return [origin], [v[1] for v in best.values() if v]  # one start node, up to three safe-stop nodes
-
-
-def default_bomb_node(net) -> int:
-    """Where the demo bomb goes: the middle of the map."""
-    if net.is_synthetic:  # offline grid
-        return sorted(net.nodes)[3 * net.metadata.get("cols", 10) + 5]  # a node near the grid centre
-    c = net.center or ((net.bounds()[0] + net.bounds()[2]) / 2, (net.bounds()[1] + net.bounds()[3]) / 2)  # map centre
-    return net.nearest_node(*c)  # the road node closest to it
-
-
-def make_hazard(net, node, blast, alert_r, strike, lead, i):
-    """Build one bomb description (stored with the scenario in SQLite as JSON)."""
-    nd = net.nodes[node]  # the node where the bomb is placed
-    return {"name": f"Bomb {i + 1}", "node": node, "lat": nd.lat, "lon": nd.lon,  # name and location
-            "blast_radius_m": float(blast),  # inside this radius roads close and people are caught
-            "alert_radius_m": float(max(alert_r, blast)),  # phones inside this radius get the alert (never smaller than the blast)
-            "strike_time_s": float(strike),  # simulation second at which the bomb goes off
-            "alert_time_s": float(max(0.0, strike - lead))}  # alert is sent `lead` seconds before the strike
-
-
-def residents_nodes(net, hazards, safe_nodes=(), max_nodes: int = 60):
-    """Start nodes for the people living inside the alert areas (evenly thinned so the crowd is spread out).
-
-    Only nodes that can walk to a safe stop on the directed road graph are used, so nobody is stranded by data quirks."""
-    reach = lv.reaching_nodes(net, list(safe_nodes)) if safe_nodes else None  # nodes from which some safe stop is reachable on foot
-    inside = sorted({nid for nid, nd in net.nodes.items() for h in hazards  # every node ...
-                     if geo.haversine_m(nd.lat, nd.lon, h["lat"], h["lon"]) <= h["alert_radius_m"]  # ... inside an alert radius ...
-                     and (reach is None or nid in reach)})  # ... and able to reach a safe stop
-    if not inside:  # nothing qualified (e.g. tiny alert radius)
-        inside = [net.nearest_node(h["lat"], h["lon"]) for h in hazards]  # fall back to the node nearest each bomb
-    step = max(1, math.ceil(len(inside) / max_nodes))  # thinning factor so at most ~60 start nodes remain
-    return inside[::step]  # every `step`-th node
-
-
 @st.cache_resource(show_spinner="Loading the saved road network...")  # computed once per session and reused on every rerun
 def osm_network(key: str, db_path: str):
     """Parse the GraphML cache and store it in SQLite ONCE per session (not on every Streamlit rerun)."""
@@ -196,34 +117,35 @@ def live_page(run_id: int, height: int, db_path: str, port: int) -> str:
                               sync_url=f"http://127.0.0.1:{port}/state", run_id=run_id)  # where the page syncs with the phone
 
 
-def build_config(net, *, name, strategy, agents, seed, dt, limit, starts, safe_nodes, safe_cap, safe_thr, zones,
-                 danger_t, hazards, dist, delay, spread, alert_channels=None):
-    """Collect all sidebar choices into one ScenarioConfig object."""
-    closures, seen = [], set()  # road closures caused by danger zones; edges already added
-    for z in zones:  # each user-placed danger zone
-        for eid in net.edges_within(z["lat"], z["lon"], z["radius_m"]):  # roads fully inside the circle
-            if eid not in seen:  # avoid duplicates when zones overlap
-                seen.add(eid)  # remember this edge
-                closures.append(ClosureSpec(eid, float(danger_t)))  # close it at the chosen time
+def build_config(net, **kw):
+    """Collect all sidebar choices into one ScenarioConfig (reusing safe-stop rows that already exist in SQLite)."""
     with open_db() as c:  # look up safe-stop rows that already exist in SQLite
         existing = {(d.node_id, d.name): d.destination_id for d in repo.list_destinations(c, net.network_id)}  # (node, name) -> destination id
-    dests = []  # safe stops of this scenario
-    for n in safe_nodes:  # each chosen safe-stop node
-        nm = f"Safe area {node_label(net, n)}"  # its stored name
-        dests.append(DestinationSpec(existing.get((n, nm)), n, nm, int(safe_cap), int(safe_thr)))  # reuse the existing row (id) if there is one
-    return ScenarioConfig(  # the full scenario description
-        name=name, network_id=net.network_id, routing_strategy=strategy, agent_count=int(agents), random_seed=int(seed),  # identity, strategy, crowd size, seed
-        timestep_seconds=float(dt), time_limit_seconds=float(limit),  # simulation step and maximum duration
-        description="danger_zones=" + json.dumps(zones), geographic_data_source=net.source,  # danger zones are kept as JSON text; data source label
-        network_fingerprint=net.fingerprint(), origins=[OriginSpec(n, 1.0, node_label(net, n)) for n in starts],  # network version hash; start nodes
-        destinations=dests, closures=closures,  # safe stops and closed roads
-        params=ModelParams(crowd_distribution=dist, departure_delay_max_seconds=float(delay),  # crowd split and reaction delay
-                           spread_radius_m=float(spread), hazards=list(hazards),  # start spread and the bombs
-                           alert_channels=dict(alert_channels or {})))  # how the alert reaches people (phone / siren / neighbour)
+    return drill.build_config(net, existing=existing, **kw)  # the pure builder lives in simulation/drill.py
 
 
-def run_config(conn, net, cfg):
-    """Validate, save and simulate. Returns run id or None (errors are shown)."""
+def phone_panel(run_id):
+    """Everything needed to open the phone view: address, QR code, and a link to preview it on this computer."""
+    url = phone_server.phone_url(phone_port, run_id)  # http://<this PC's address>:<port>/phone?run=<id>
+    st.markdown("**Open on your phone** (same Wi-Fi as this computer)")  # short instruction
+    try:  # the QR code needs the optional "segno" package
+        import io  # in-memory byte buffer
+        import segno  # QR code generator
+        buf = io.BytesIO()  # buffer to hold the PNG
+        segno.make(url, error="m").save(buf, kind="png", scale=6, border=2)  # draw the QR code as a PNG
+        st.image(buf.getvalue(), width=200)  # show it: scan with the phone camera
+    except ImportError:  # segno not installed
+        st.caption("pip install segno to show a QR code")  # tell the user how to get it
+    st.code(url, language=None)  # the address, for typing by hand
+    st.link_button("Preview phone view here", url, **STRETCH)  # opens the same page in a new tab on this computer
+    st.caption("If the phone cannot connect, allow Python through the Windows firewall for private networks.")  # the usual fix
+
+
+def run_config(conn, net, cfg, strategies=None):
+    """Validate, save and simulate. Returns run id or None (errors are shown).
+
+    With ``strategies`` the SAME saved crowd is simulated once per strategy (a fair comparison) and the run ids are
+    kept in session state for the comparison table."""
     errors, warnings = validate_scenario(net, cfg)  # check the scenario before spending time on it
     for e in errors:  # show every blocking problem
         st.error(e)  # red message on the page
@@ -240,11 +162,17 @@ def run_config(conn, net, cfg):
     with st.spinner("Simulating and saving to SQL..."):  # progress indicator while the simulation runs
         sid = repo.save_scenario(conn, cfg, net)  # INSERT scenario, origins, destinations, closures in one transaction
         repo.ensure_population(conn, sid, net, cfg)  # INSERT the generated people (agents) once per scenario
+        if strategies:  # compare: same scenario row, same people, one run per routing strategy
+            ids = {s: run_scenario(conn, sid, s, label=f"compare:{s}") for s in strategies}  # simulate each strategy on the identical crowd
+            st.session_state["compare_runs"] = ids  # remembered for the comparison table
+            return ids.get("CONGESTION_AWARE", next(iter(ids.values())))  # replay the congestion-aware run first
         return run_scenario(conn, sid, cfg.routing_strategy, label="live")  # simulate, then INSERT events, snapshots, outcomes atomically
 
 
 # ----------------------------------------------------------------------------- app
 with open_db() as conn:  # one SQLite connection for this whole page run
+    header = st.container()  # brand and status chips (filled in below, once the map is known)
+    quick = st.container()  # quick controls: path, walking speed, run buttons, phone (filled in below)
     # ----------------------------------------------------------- MAP
     st.sidebar.markdown("### Map")  # sidebar section title
     cached = cache.list_cached()  # real-map networks already downloaded to disk
@@ -298,9 +226,21 @@ with open_db() as conn:  # one SQLite connection for this whole page run
 
     # ------------------------------------------------------ SIMULATION
     st.sidebar.markdown("### Simulation")  # sidebar section title
-    strategy = st.sidebar.selectbox("Routing strategy", settings.ROUTING_STRATEGIES, index=1,  # how people choose routes (default: congestion-aware)
-                                    format_func=lambda s: s.replace("_", " ").title(),  # "CONGESTION_AWARE" -> "Congestion Aware"
-                                    help="Shortest path ignores crowds; congestion-aware avoids full roads; load-balanced assigns safe stops centrally.")  # tooltip
+    busy = st.session_state.get("busy", False)  # a run is in progress: buttons stay disabled
+    with quick:  # the controls people change most sit above the tabs, one click away
+        q1, q2 = st.columns([3, 2])  # path picker | walking-speed slider
+        strategy = q1.radio("Path: how people choose a route", settings.ROUTING_STRATEGIES, index=1, horizontal=True, key="strategy",  # routing strategy (default: congestion-aware)
+                            format_func=lambda s: s.replace("_", " ").title(),  # "CONGESTION_AWARE" -> "Congestion Aware"
+                            help="Shortest path ignores crowds; congestion-aware avoids full roads; load-balanced assigns safe stops centrally.")  # tooltip
+        walk_speed = q2.slider("Walking speed (m/s)", 0.6, 2.5, 1.4, 0.1, key="walk_speed",  # how fast people walk
+                               help="0.8 = slow or carrying children, 1.4 = normal walk, 2.2 = brisk jog.")  # tooltip
+        b1, b2, b3, b4 = st.columns([1.4, 1.8, 1.4, 3])  # run | compare | phone | spare room
+        run_clicked = b1.button("▶ RUN", type="primary", **STRETCH, disabled=busy, key="run_top",  # run one simulation with the sidebar settings
+                                help="Run one simulation with the strategy and speed chosen here.")  # tooltip
+        compare_clicked = b2.button("⚖ COMPARE ALL 3", **STRETCH, disabled=busy, key="compare_top",  # run all three strategies on the same crowd
+                                    help="Runs shortest path, congestion-aware and load-balanced on the SAME crowd and shows who was caught.")  # tooltip
+        with b3.popover("📱 PHONE", **STRETCH):  # pop-up with the address for a real phone
+            phone_panel(st.session_state.get("replay_run"))  # address, QR code and a preview link
     c1, c2 = st.sidebar.columns(2)  # two side-by-side input boxes
     limit = c1.number_input("Time limit (s)", 300.0, 21600.0, 2400.0, step=300.0)  # maximum simulated seconds
     dt = c2.number_input("Timestep (s)", 1.0, 30.0, 5.0)  # simulated seconds per step
@@ -380,16 +320,17 @@ with open_db() as conn:  # one SQLite connection for this whole page run
     spread = st.sidebar.slider("Start spread radius (m)", 0, 300, 0, 10)  # scatter start positions around the start nodes
 
     st.sidebar.markdown("---")  # divider line
-    run_clicked = st.sidebar.button("▶ RUN SIMULATION", type="primary", **STRETCH,  # the main action button
-                                    disabled=st.session_state.get("busy", False))  # disabled while a run is in progress
-    if run_clicked:  # the user pressed RUN SIMULATION
+    run_clicked = st.sidebar.button("▶ RUN SIMULATION", type="primary", **STRETCH, key="run_side",  # same action as the top bar
+                                    disabled=busy) or run_clicked  # disabled while a run is in progress
+    if run_clicked or compare_clicked:  # the user pressed RUN or COMPARE ALL 3
         st.session_state["busy"] = True  # guard against duplicate runs caused by Streamlit reruns
         try:  # make sure the guard is released afterwards
             cfg = build_config(net, name=f"{'Bomb drill' if hazards else 'Sim'} {datetime.now():%Y-%m-%d %H:%M:%S}",  # unique scenario name
                                strategy=strategy, agents=agents, seed=seed, dt=dt, limit=limit, starts=start_nodes,  # strategy, crowd, timing, starts
                                safe_nodes=safe_nodes, safe_cap=safe_cap, safe_thr=safe_thr, zones=zones, danger_t=danger_t,  # safe stops and zones
-                               hazards=hazards, dist=dist, delay=delay, spread=spread, alert_channels=alert_channels)  # bombs, crowd behaviour, alert channels
-            rid = run_config(conn, net, cfg)  # validate, store in SQLite, simulate
+                               hazards=hazards, dist=dist, delay=delay, spread=spread, alert_channels=alert_channels,  # bombs, crowd behaviour, alert channels
+                               walking_speed=walk_speed)  # how fast people walk
+            rid = run_config(conn, net, cfg, strategies=list(settings.ROUTING_STRATEGIES) if compare_clicked else None)  # validate, store in SQLite, simulate (all three if comparing)
             if rid:  # success
                 st.session_state["replay_run"] = rid  # show this run in the replay
         finally:  # always runs
@@ -412,13 +353,14 @@ with open_db() as conn:  # one SQLite connection for this whole page run
              f'<span class="pe-chip">{len(runs)} saved run(s)</span>']  # number of runs in SQLite
     if n_bombs:  # bombs are configured in the sidebar
         chips.append(f'<span class="pe-chip red">💣 {n_bombs} bomb area(s) configured</span>')  # remind the user
-    st.markdown(f'<div class="pe-top"><div><div class="pe-brand">PANIC<i>.</i>ENGINE</div>'  # brand name
-                f'</div>'  # close the brand block
-                f'<div class="pe-chips">{"".join(chips)}</div></div>', unsafe_allow_html=True)  # status chips, drawn as HTML
+    with header:  # drawn at the top of the page, above the quick controls
+        st.markdown(f'<div class="pe-top"><div><div class="pe-brand">PANIC<i>.</i>ENGINE</div>'  # brand name
+                    f'</div>'  # close the brand block
+                    f'<div class="pe-chips">{"".join(chips)}</div></div>', unsafe_allow_html=True)  # status chips, drawn as HTML
 
     tabs = st.tabs(["▶ LIVE SIMULATION", "📊 ANALYTICS", "⚖ STRATEGIES", "🗄 SQL"])  # the four tabs
     with tabs[0]:  # ---- LIVE SIMULATION tab
-        c1, c2, c3 = st.columns([2, 3.6, 1.5])  # demo button | run picker | phone button
+        c1, c2 = st.columns([2, 5])  # demo button | run picker
         if c1.button("💣 RUN BOMB-ALERT DEMO", type="primary", **STRETCH,  # one-click demo
                      disabled=st.session_state.get("busy", False)):  # disabled while busy
             st.session_state["busy"] = True  # block duplicate clicks
@@ -427,13 +369,17 @@ with open_db() as conn:  # one SQLite connection for this whole page run
                 cfg = build_config(net, name=f"Bomb drill demo {datetime.now():%H:%M:%S}", strategy="CONGESTION_AWARE",  # demo scenario
                                    agents=250, seed=42, dt=5.0, limit=1800.0, starts=residents_nodes(net, hz, def_dests),  # 250 residents in the alert area
                                    safe_nodes=def_dests, safe_cap=300, safe_thr=8, zones=[], danger_t=0.0, hazards=hz,  # default safe stops, no extra zones
-                                   dist="even", delay=90, spread=0)  # even split, up to 90 s reaction delay
+                                   dist="even", delay=90, spread=0, walking_speed=walk_speed)  # even split, up to 90 s reaction delay, chosen walking speed
                 rid = run_config(conn, net, cfg)  # validate, store in SQLite, simulate
                 if rid:  # success
                     st.session_state["replay_run"] = rid  # replay it
                     st.rerun()  # redraw the page so the new run appears
             finally:  # always runs
                 st.session_state["busy"] = False  # allow the next click
+        cmp_ids = st.session_state.get("compare_runs")  # run ids of the last "compare all 3" click
+        if cmp_ids:  # a comparison exists
+            with st.expander("⚖ Strategy comparison (same crowd)", expanded=True):  # collapsible results box
+                dashboard.render_comparison(conn, cmp_ids)  # table and chart from SQL
         runs = conn.execute(RUNS_SQL, (net.network_id,)).fetchall()  # SQL again: the list may have just grown
         if not runs:  # nothing to replay yet
             c2.info("Press the demo button, or set up the sidebar and press RUN SIMULATION.")  # hint
@@ -446,18 +392,6 @@ with open_db() as conn:  # one SQLite connection for this whole page run
                 f"Run #{i} · {by_id[i]['scenario_name']} · {by_id[i]['routing_strategy'].replace('_', ' ').title()} · "  # name and strategy
                 f"{by_id[i]['total_agents']} people · {by_id[i]['completion_rate']:.0%} safe"))  # crowd size and completion rate
             st.session_state["replay_run"] = run_id  # remember the choice
-            with c3.popover("📱 PHONE VIEW", **STRETCH):  # pop-up with the address for a real phone
-                url = phone_server.phone_url(phone_port, run_id)  # http://<this PC's address>:<port>/phone?run=<id>
-                st.code(url, language=None)  # show the address
-                try:  # the QR code needs the optional "segno" package
-                    import io  # in-memory byte buffer
-                    import segno  # QR code generator
-                    buf = io.BytesIO()  # buffer to hold the PNG
-                    segno.make(url, error="m").save(buf, kind="png", scale=6, border=2)  # draw the QR code as a PNG
-                    st.image(buf.getvalue(), width=190)  # show it
-                except ImportError:  # segno not installed
-                    st.caption("pip install segno to show a QR code")  # tell the user how to get it
-                st.caption("Same Wi-Fi as this PC")  # the phone must be on the same network
             run = by_id[run_id]  # the SQL row of the chosen run (already fetched above)
             frames = conn.execute(FRAME_COUNT_SQL, (run_id,)).fetchone()[0]  # SQL: number of stored replay frames
             if not frames:  # nothing to animate
