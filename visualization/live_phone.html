@@ -52,6 +52,7 @@ footer select{background:#111;color:#fff;border:1px solid #444;border-radius:8px
 </main>
 <footer><button id="bPlay">&#9654; PLAY</button><button id="bReset">RESET</button>
  <select id="sp"><option value="15">15&times;</option><option value="30">30&times;</option><option value="60" selected>60&times;</option><option value="120">120&times;</option><option value="240">240&times;</option></select>
+ <select id="wspd" title="Walking speed of this person (m/s)"><option value="0.6">0.6 m/s</option><option value="1.0">1.0 m/s</option><option value="1.4" selected>1.4 m/s</option><option value="2.0">2.0 m/s</option><option value="2.8">2.8 m/s</option></select>
  <button id="bCtl">TAKE CONTROL</button><button id="bAuto" disabled>AUTO</button></footer>
 </div>
 <script>__CORE__</script>
@@ -101,7 +102,7 @@ function updatePhone(x){const p=P[sel],st=personStatus(sel,x),alerted=p.alert!==
  $('nName').textContent=st[0]==='SAFE'?(p.manual&&p.manual.stop?p.manual.stop:'You are safe'):(guide?stopName:'No open route');
  if(guide&&p.startDist===null)p.startDist=guide.dist;
  $('nDist').textContent=st[0]==='SAFE'?'0 m':guide?(guide.dist>=1000?(guide.dist/1000).toFixed(2)+' km':Math.round(guide.dist)+' m'):'-';
- $('nEta').textContent=st[0]==='SAFE'?'-':guide?Math.max(1,Math.round(guide.dist/WALK/60))+' min':'-';
+ $('nEta').textContent=st[0]==='SAFE'?'-':guide?Math.max(1,Math.round(guide.dist/((P[sel].manual&&P[sel].manual.speed)||P[sel].spd||WALK)/60))+' min':'-';
  $('nCd').textContent=ns!==undefined?fmtMS(ns-x):'-';$('nCdl').textContent=ns!==undefined?'Blast in':'Blast';
  const chip=$('nChip');chip.textContent=st[0];chip.style.color=st[1];chip.style.borderColor=st[1];
  $('nMsg').textContent=st[0]==='SAFE'?'You have reached a safe stop.':st[0]==='CAUGHT'?'The blast area reached this position.':!guide?'No open route. Find shelter and call for help.':
@@ -132,7 +133,7 @@ const BRG={up:0,right:90,down:180,left:-90};
 function stepManual(m,dt,x){core.stepManual(m,dt,x,{dir:()=>dirSticky||dirHeld,clear:()=>{dirSticky=null;},bearing:d=>BRG[d],pref:-1});}
 function turnAround(m,brg){if(m.to<0)return;const h=m.heading,df=Math.abs(((h-brg+540)%360)-180);if(df>120){const a=m.from;m.from=m.to;m.to=a;m.prog=m.len-m.prog;m.heading=(h+180)%360;}}
 function startControl(pi){const p=P[pi],cur=personAt(pi,t),nd=nearestNode(cur.lon,cur.lat),G=D.graph;
- p.manual={node:nd,from:nd,to:-1,len:1,prog:0,lon:G.lon[nd],lat:G.lat[nd],heading:cur.h||0,trail:[[cur.lon,cur.lat],[G.lon[nd],G.lat[nd]]],status:'idle',auto:false,stop:''};tEnd=tmax+1800;}
+ p.manual={node:nd,from:nd,to:-1,len:1,prog:0,lon:G.lon[nd],lat:G.lat[nd],heading:cur.h||0,trail:[[cur.lon,cur.lat],[G.lon[nd],G.lat[nd]]],status:'idle',auto:false,stop:'',speed:p.spd||WALK};tEnd=tmax+1800;}
 function stopControl(pi){P[pi].manual=null;tEnd=P.some(p=>p.manual)?tmax+1800:tmax;t=Math.min(t,tEnd);}
 function updateCtl(){const m=P[sel].manual;$('bCtl').textContent=m?'RELEASE':'TAKE CONTROL';$('bCtl').classList.toggle('on',!!m);$('bAuto').disabled=!m;$('bAuto').classList.toggle('on',!!(m&&m.auto));}
 /* ---------- sync with the dashboard through the phone server ---------- */
@@ -151,7 +152,7 @@ function applyState(s){if(!s||(s.run!==null&&s.run!==undefined&&s.run!==D.run))r
 setInterval(async()=>{if(!D.sync)return;try{if(owner===ME)push();else{const r=await fetch(D.sync);applyState(await r.json());setConn(true);}}catch(e){setConn(false);}},400);
 /* ---------- UI ---------- */
 function buildWho(){const w=$('who'),cur=w.value;w.innerHTML=P.map((p,i)=>'<option value="'+i+'">'+p.name+'</option>').join('');w.value=cur||String(sel);}
-function select(i,fromSync){sel=i;$('who').value=String(i);guide=null;clearTimeout(alertTimer);const p=P[i];p.shown=false;
+function select(i,fromSync){sel=i;$('who').value=String(i);guide=null;clearTimeout(alertTimer);const p=P[i];p.shown=false;$('wspd').value=String(p.spd||WALK);
  if(p.alert!==null&&t>=p.alert)show('pNav');else show('pHome');updateCtl();refreshGuide(true);updatePhone(t);if(!fromSync)claim();}
 function setPlayBtn(){$('bPlay').innerHTML=playing?'&#10074;&#10074; PAUSE':'&#9654; PLAY';$('bPlay').classList.toggle('on',playing);}
 $('who').onchange=e=>select(+e.target.value);
@@ -160,6 +161,7 @@ $('bReset').onclick=()=>{t=0;playing=false;P.forEach(p=>{p.trail=[];p.shown=fals
 $('sp').onchange=e=>{speed=+e.target.value;claim();};
 $('snd').onclick=()=>{soundOn=!soundOn;$('snd').innerHTML=soundOn?'&#128266;':'&#128263;';};
 $('aView').onclick=()=>{clearTimeout(alertTimer);show('pNav');};
+$('wspd').onchange=e=>{const v=+e.target.value;P[sel].spd=v;if(P[sel].manual){P[sel].manual.speed=v;refreshGuide(true);claim();}};
 $('bCtl').onclick=()=>{if(P[sel].manual)stopControl(sel);else{startControl(sel);P[sel].shown=true;show('pNav');}updateCtl();refreshGuide(true);claim();};
 $('bAuto').onclick=()=>{const m=P[sel].manual;if(m){m.auto=!m.auto;updateCtl();claim();}};
 document.querySelectorAll('#dpad button').forEach(b=>{const d=b.dataset.d;const down=e=>{e.preventDefault();dirHeld=d;dirSticky=d;const m=P[sel].manual;if(m)turnAround(m,BRG[d]);claim();};const up=()=>{dirHeld=null;};

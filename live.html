@@ -111,7 +111,8 @@ input[type=range]{accent-color:#fff;flex:1;min-width:120px}
  <div class="card"><h4><span>Tracked people</span></h4>
   <div id="roster"></div>
   <div id="ctl"><div class="row"><label><input type="checkbox" id="cPath" checked>Show route on map</label><label><input type="checkbox" id="cFollow">Follow camera</label></div>
-   <div class="row"><label>Guide to <select id="cStop"></select></label></div>
+   <div class="row"><label>Path: go to <select id="cStop"></select></label></div>
+   <div class="row"><label title="Applies to this person when you take control; the recorded run keeps its stored speeds">Walking speed <input type="range" id="cSpd" min="0.5" max="3" step="0.1" value="1.4" style="width:120px"> <b id="cSpdV">1.4</b> m/s</label></div>
    <div class="row"><button id="bCtl">TAKE CONTROL</button><button id="bAuto" disabled>AUTO-GUIDE</button></div>
    </div>
  </div>
@@ -9077,7 +9078,7 @@ function route(src,x,pref){const closed=closedAt(x),dist=new Float64Array(NN).fi
   if(tg.has(u)){const path=[];for(let v=u;v>=0;v=prev[v])path.push(v);path.reverse();return{safe:tg.get(u),nodes:path,dist:d};}
   for(let k=adjStart[u];k<adjStart[u+1];k++){if(closed.has(adjRoad[k]))continue;const v=adjTo[k],nd=d+adjLen[k];if(nd<dist[v]){dist[v]=nd;prev[v]=u;push(nd,v);}}}
  return null;}
-function stepManual(m,dt,x,ctl){if(m.status!=='moving'&&m.status!=='idle')return;let move=dt*WALK,guard=0;m.status='idle';
+function stepManual(m,dt,x,ctl){if(m.status!=='moving'&&m.status!=='idle')return;let move=dt*(m.speed||WALK),guard=0;m.status='idle';
  while(move>0&&guard++<400){
   if(m.to<0){const si=D.safe.findIndex((s,i)=>s.node===m.node&&safeOpen(i,x));if(si>=0){m.status='safe';m.stop=D.safe[si].name;return;}
    let nxt=-1;const d=ctl.dir();
@@ -9140,7 +9141,7 @@ function personAt(pi,x){const p=P[pi];if(p.manual){const m=p.manual;return{lon:m
 function stepManual(m,dt,x){core.stepManual(m,dt,x,{dir:()=>dirSticky||dirHeld,clear:()=>{dirSticky=null;},bearing:bearingFor,pref});}
 function turnAround(m,brg){if(m.to<0)return;const h=m.heading;const df=Math.abs(((h-brg+540)%360)-180);if(df>120){const a=m.from;m.from=m.to;m.to=a;m.prog=m.len-m.prog;m.heading=(h+180)%360;}}
 function startControl(pi){const p=P[pi],cur=personAt(pi,t),nd=nearestNode(cur.lon,cur.lat);
- p.manual={node:nd,from:nd,to:-1,len:1,prog:0,lon:G.lon[nd],lat:G.lat[nd],heading:cur.h||0,trail:[[cur.lon,cur.lat],[G.lon[nd],G.lat[nd]]],status:'idle',auto:false,stop:''};
+ p.manual={node:nd,from:nd,to:-1,len:1,prog:0,lon:G.lon[nd],lat:G.lat[nd],heading:cur.h||0,trail:[[cur.lon,cur.lat],[G.lon[nd],G.lat[nd]]],status:'idle',auto:false,stop:'',speed:p.spd||WALK};
  tEnd=tmaxData+1800;toast('Manual control ON: press PLAY, then use arrow keys / WASD or the D-pad');}
 function stopControl(pi){P[pi].manual=null;tEnd=P.some(p=>p.manual)?tmaxData+1800:tmaxData;t=Math.min(t,tEnd);}
 /* ---------- bombs: banner, flash, siren ---------- */
@@ -9187,7 +9188,7 @@ function updatePhone(x){if(!P.length)return;const p=P[sel],c=personAt(sel,x),st=
  $('nName').textContent=st[0]==='SAFE'?(p.manual&&p.manual.stop?p.manual.stop:stopName):(guide?stopName:'No open route');
  if(guide&&p.startDist===null)p.startDist=guide.dist;
  $('nDist').textContent=st[0]==='SAFE'?'0 m':guide?(guide.dist>=1000?(guide.dist/1000).toFixed(2)+' km':Math.round(guide.dist)+' m'):'-';
- $('nEta').textContent=st[0]==='SAFE'?'-':guide?Math.max(1,Math.round(guide.dist/WALK/60))+' min':'-';
+ $('nEta').textContent=st[0]==='SAFE'?'-':guide?Math.max(1,Math.round(guide.dist/((P[sel]&&P[sel].manual&&P[sel].manual.speed)||(P[sel]&&P[sel].spd)||WALK)/60))+' min':'-';
  $('nCd').textContent=nextStrike!==undefined?fmtMS(nextStrike-x):'-';$('nCdl').textContent=nextStrike!==undefined?'Blast in':'Blast';
  const chip=$('nChip');chip.textContent=st[0];chip.style.color=st[1];chip.style.borderColor=st[1];
  const msg=st[0]==='SAFE'?'You have reached a safe stop. Stay here until the all-clear.':st[0]==='CAUGHT'?'The blast area reached this position.':
@@ -9222,7 +9223,7 @@ function buildRoster(){const R=$('roster');R.innerHTML='';P.forEach((p,i)=>{cons
  inp.onclick=e=>e.stopPropagation();inp.onchange=()=>{p.name=inp.value.trim()||p.name;names[p.k]=p.name;claim();try{localStorage.setItem('pe_names',JSON.stringify(names));}catch(e){}updatePhone(t);};
  r.onclick=()=>selectPerson(i);R.appendChild(r);});
  const cs=$('cStop');cs.innerHTML='<option value="-1">Nearest safe stop (auto)</option>'+D.safe.map((s,i)=>'<option value="'+i+'">'+s.name+'</option>').join('');}
-function selectPerson(i,fromSync){sel=i;pref=-1;$('cStop').value='-1';guide=null;clearTimeout(alertTimer);[...$('roster').children].forEach((r,k)=>r.classList.toggle('sel',k===i));
+function selectPerson(i,fromSync){sel=i;pref=-1;$('cStop').value='-1';{const v=P[i].spd||WALK;$('cSpd').value=v;$('cSpdV').textContent=v.toFixed(1);}guide=null;clearTimeout(alertTimer);[...$('roster').children].forEach((r,k)=>r.classList.toggle('sel',k===i));
  const p=P[i];p.shown=false;if(p.alert!==null&&t>=p.alert)show('pNav');else show('pHome');updateCtl();refreshGuide(true);updatePhone(t);if(!fromSync)claim();}
 function updateCtl(){const m=P[sel]&&P[sel].manual;$('bCtl').textContent=m?'RELEASE CONTROL':'TAKE CONTROL';$('bCtl').classList.toggle('on',!!m);$('bAuto').disabled=!m;$('bAuto').classList.toggle('on',!!(m&&m.auto));}
 let rosterAt=0;
@@ -9293,6 +9294,7 @@ $('sp').onchange=e=>{speed=+e.target.value;claim();};$('bm').onchange=e=>{basema
 $('tm').oninput=e=>{t=tmaxData*(+e.target.value)/1000;playing=false;setPlay();claim();};
 $('bSnd').onclick=()=>{soundOn=!soundOn;$('bSnd').classList.toggle('on',!soundOn);$('bSnd').innerHTML=soundOn?'&#128266; SOUND':'&#128263; MUTED';};
 $('aView').onclick=()=>{clearTimeout(alertTimer);show('pNav');};
+$('cSpd').oninput=e=>{const v=+e.target.value;P[sel].spd=v;$('cSpdV').textContent=v.toFixed(1);if(P[sel].manual){P[sel].manual.speed=v;refreshGuide(true);claim();}};
 $('cStop').onchange=e=>{pref=+e.target.value;P[sel].startDist=null;refreshGuide(true);};
 $('cFollow').onchange=e=>{follow=e.target.checked;};
 $('bCtl').onclick=()=>{if(!P.length)return;if(P[sel].manual)stopControl(sel);else{startControl(sel);P[sel].shown=true;show('pNav');}updateCtl();refreshGuide(true);claim();};

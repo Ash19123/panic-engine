@@ -29,7 +29,7 @@ function route(src,x,pref){const closed=closedAt(x),dist=new Float64Array(NN).fi
   if(tg.has(u)){const path=[];for(let v=u;v>=0;v=prev[v])path.push(v);path.reverse();return{safe:tg.get(u),nodes:path,dist:d};}
   for(let k=adjStart[u];k<adjStart[u+1];k++){if(closed.has(adjRoad[k]))continue;const v=adjTo[k],nd=d+adjLen[k];if(nd<dist[v]){dist[v]=nd;prev[v]=u;push(nd,v);}}}
  return null;}
-function stepManual(m,dt,x,ctl){if(m.status!=='moving'&&m.status!=='idle')return;let move=dt*WALK,guard=0;m.status='idle';
+function stepManual(m,dt,x,ctl){if(m.status!=='moving'&&m.status!=='idle')return;let move=dt*(m.speed||WALK),guard=0;m.status='idle';
  while(move>0&&guard++<400){
   if(m.to<0){const si=D.safe.findIndex((s,i)=>s.node===m.node&&safeOpen(i,x));if(si>=0){m.status='safe';m.stop=D.safe[si].name;return;}
    let nxt=-1;const d=ctl.dir();
