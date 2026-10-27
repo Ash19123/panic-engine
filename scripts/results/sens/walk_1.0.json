@@ -1,0 +1,141 @@
+{
+  "map": "campus",
+  "bomb": true,
+  "agents": 250,
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "blast_m": 150.0,
+  "lead_s": 180.0,
+  "strike_s": 420.0,
+  "reaction_delay_max_s": 90.0,
+  "walk_mps": 1.0,
+  "bpr_alpha": 0.6,
+  "bpr_beta": 2.0,
+  "safe_cap": 300,
+  "strategies": {
+    "SHORTEST_PATH": {
+      "safe_pct": {
+        "mean": 14.08,
+        "sd": 2.94,
+        "min": 9.2,
+        "max": 19.6
+      },
+      "evacuated_pct": {
+        "mean": 89.96,
+        "sd": 2.44,
+        "min": 86.8,
+        "max": 92.8
+      },
+      "caught_pct": {
+        "mean": 10.04,
+        "sd": 2.44,
+        "min": 7.2,
+        "max": 13.2
+      },
+      "caught": {
+        "mean": 25.1,
+        "sd": 6.1,
+        "min": 18.0,
+        "max": 33.0
+      },
+      "unable_pct": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "median_s": {
+        "mean": 946.0,
+        "sd": 63.08,
+        "min": 860.0,
+        "max": 1042.5
+      }
+    },
+    "CONGESTION_AWARE": {
+      "safe_pct": {
+        "mean": 14.08,
+        "sd": 2.94,
+        "min": 9.2,
+        "max": 19.6
+      },
+      "evacuated_pct": {
+        "mean": 90.52,
+        "sd": 2.46,
+        "min": 86.8,
+        "max": 93.6
+      },
+      "caught_pct": {
+        "mean": 9.48,
+        "sd": 2.46,
+        "min": 6.4,
+        "max": 13.2
+      },
+      "caught": {
+        "mean": 23.7,
+        "sd": 6.15,
+        "min": 16.0,
+        "max": 33.0
+      },
+      "unable_pct": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "median_s": {
+        "mean": 916.5,
+        "sd": 45.36,
+        "min": 865.0,
+        "max": 992.5
+      }
+    },
+    "LOAD_BALANCED": {
+      "safe_pct": {
+        "mean": 14.08,
+        "sd": 2.94,
+        "min": 9.2,
+        "max": 19.6
+      },
+      "evacuated_pct": {
+        "mean": 90.16,
+        "sd": 2.5,
+        "min": 86.8,
+        "max": 93.2
+      },
+      "caught_pct": {
+        "mean": 9.84,
+        "sd": 2.5,
+        "min": 6.8,
+        "max": 13.2
+      },
+      "caught": {
+        "mean": 24.6,
+        "sd": 6.24,
+        "min": 17.0,
+        "max": 33.0
+      },
+      "unable_pct": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "median_s": {
+        "mean": 914.25,
+        "sd": 46.62,
+        "min": 860.0,
+        "max": 992.5
+      }
+    }
+  }
+}

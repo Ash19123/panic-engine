@@ -1,0 +1,2029 @@
+{
+  "t_quantile_0.975_df9": 2.2621571627982036,
+  "scenarios": {
+    "campus_bomb_L180": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.5599999999999998,
+        "sd_diff": 0.735149266778145,
+        "ci95_low": 0.03410589509098361,
+        "ci95_high": 1.085894104909016,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 1,
+        "crowds_equal": 1
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.6399999999999998,
+        "sd_diff": 0.6022181221672647,
+        "ci95_low": 0.20919910740696185,
+        "ci95_high": 1.0708008925930377,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.07999999999999999,
+        "sd_diff": 0.2529822128134703,
+        "ci95_low": -0.10097257302385623,
+        "ci95_high": 0.26097257302385624,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 0,
+        "crowds_equal": 9
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.5600000000000023,
+        "sd_diff": 0.735149266778145,
+        "ci95_low": -1.0858941049090185,
+        "ci95_high": -0.03410589509098605,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 8,
+        "crowds_equal": 1
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.640000000000002,
+        "sd_diff": 0.602218122167265,
+        "ci95_low": -1.0708008925930401,
+        "ci95_high": -0.2091991074069638,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 8,
+        "crowds_equal": 2
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.07999999999999971,
+        "sd_diff": 0.25298221281346944,
+        "ci95_low": -0.26097257302385535,
+        "ci95_high": 0.10097257302385593,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 15.0,
+        "sd_diff": 14.813657362192648,
+        "ci95_low": 4.402947903272317,
+        "ci95_high": 25.597052096727683,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 1,
+        "crowds_equal": 1
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 14.5,
+        "sd_diff": 15.083103128998356,
+        "ci95_low": 3.710198013203291,
+        "ci95_high": 25.28980198679671,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 1,
+        "crowds_equal": 1
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.5,
+        "sd_diff": 1.5811388300841898,
+        "ci95_low": -1.6310785813991018,
+        "ci95_high": 0.6310785813991018,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      }
+    },
+    "campus_bomb_L300": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 16.25,
+        "sd_diff": 17.006943026632126,
+        "ci95_low": 4.083965856449078,
+        "ci95_high": 28.416034143550924,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 16.0,
+        "sd_diff": 16.881943016134134,
+        "ci95_low": 3.9233854772052243,
+        "ci95_high": 28.076614522794777,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      }
+    },
+    "campus_bomb_L400": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 16.25,
+        "sd_diff": 17.006943026632126,
+        "ci95_low": 4.083965856449078,
+        "ci95_high": 28.416034143550924,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 16.0,
+        "sd_diff": 16.881943016134134,
+        "ci95_low": 3.9233854772052243,
+        "ci95_high": 28.076614522794777,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      }
+    },
+    "campus_bomb_L60": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.520000000000001,
+        "sd_diff": 0.500666222813829,
+        "ci95_low": 0.1618449599238811,
+        "ci95_high": 0.8781550400761209,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.520000000000001,
+        "sd_diff": 0.500666222813829,
+        "ci95_low": 0.1618449599238811,
+        "ci95_high": 0.8781550400761209,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.519999999999996,
+        "sd_diff": 0.500666222813829,
+        "ci95_low": -0.878155040076116,
+        "ci95_high": -0.1618449599238761,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 8,
+        "crowds_equal": 2
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.519999999999996,
+        "sd_diff": 0.500666222813829,
+        "ci95_low": -0.878155040076116,
+        "ci95_high": -0.1618449599238761,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 8,
+        "crowds_equal": 2
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 5.0,
+        "sd_diff": 5.773502691896257,
+        "ci95_low": 0.8698849777117923,
+        "ci95_high": 9.130115022288209,
+        "crowds_a_greater": 7,
+        "crowds_b_greater": 0,
+        "crowds_equal": 3
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 5.0,
+        "sd_diff": 5.773502691896257,
+        "ci95_low": 0.8698849777117923,
+        "ci95_high": 9.130115022288209,
+        "crowds_a_greater": 7,
+        "crowds_b_greater": 0,
+        "crowds_equal": 3
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "campus_closure": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -17.599999999999994,
+        "sd_diff": 0.0,
+        "ci95_low": -17.599999999999994,
+        "ci95_high": -17.599999999999994,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -17.599999999999994,
+        "sd_diff": 0.0,
+        "ci95_low": -17.599999999999994,
+        "ci95_high": -17.599999999999994,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 320.25,
+        "sd_diff": 28.757849170076835,
+        "ci95_low": 299.6778739953228,
+        "ci95_high": 340.8221260046772,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 314.5,
+        "sd_diff": 6.5404722901161945,
+        "ci95_low": 309.8212279789556,
+        "ci95_high": 319.1787720210444,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -5.75,
+        "sd_diff": 24.552947322515525,
+        "ci95_low": -23.31412042909541,
+        "ci95_high": 11.81412042909541,
+        "crowds_a_greater": 3,
+        "crowds_b_greater": 6,
+        "crowds_equal": 1
+      }
+    },
+    "campus_phone_100": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.8,
+        "sd_diff": 0.6531972647421808,
+        "ci95_low": 0.3327308257055328,
+        "ci95_high": 1.2672691742944673,
+        "crowds_a_greater": 9,
+        "crowds_b_greater": 0,
+        "crowds_equal": 1
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.8399999999999999,
+        "sd_diff": 0.6380525927469546,
+        "ci95_low": 0.38356467140597816,
+        "ci95_high": 1.2964353285940216,
+        "crowds_a_greater": 9,
+        "crowds_b_greater": 0,
+        "crowds_equal": 1
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.039999999999999945,
+        "sd_diff": 0.126491106406735,
+        "ci95_low": -0.05048628651192807,
+        "ci95_high": 0.13048628651192795,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 0,
+        "crowds_equal": 9
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.8000000000000014,
+        "sd_diff": 0.6531972647421804,
+        "ci95_low": -1.2672691742944684,
+        "ci95_high": -0.3327308257055343,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 9,
+        "crowds_equal": 1
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.8400000000000005,
+        "sd_diff": 0.6380525927469546,
+        "ci95_low": -1.2964353285940222,
+        "ci95_high": -0.38356467140597883,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 9,
+        "crowds_equal": 1
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.03999999999999915,
+        "sd_diff": 0.12649110640673247,
+        "ci95_low": -0.13048628651192534,
+        "ci95_high": 0.05048628651192705,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 16.5,
+        "sd_diff": 15.59914527573012,
+        "ci95_low": 5.3410436997667965,
+        "ci95_high": 27.658956300233204,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 16.25,
+        "sd_diff": 14.96523749672331,
+        "ci95_low": 5.5445140072278445,
+        "ci95_high": 26.955485992772154,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      }
+    },
+    "campus_phone_30": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.11999999999999975,
+        "sd_diff": 0.1932183566158588,
+        "ci95_low": -0.018220085765457417,
+        "ci95_high": 0.2582200857654569,
+        "crowds_a_greater": 3,
+        "crowds_b_greater": 0,
+        "crowds_equal": 7
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.11999999999999975,
+        "sd_diff": 0.1932183566158588,
+        "ci95_low": -0.018220085765457417,
+        "ci95_high": 0.2582200857654569,
+        "crowds_a_greater": 3,
+        "crowds_b_greater": 0,
+        "crowds_equal": 7
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.11999999999999993,
+        "sd_diff": 0.19321835661585907,
+        "ci95_low": -0.2582200857654573,
+        "ci95_high": 0.01822008576545743,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 3,
+        "crowds_equal": 7
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.11999999999999993,
+        "sd_diff": 0.19321835661585907,
+        "ci95_low": -0.2582200857654573,
+        "ci95_high": 0.01822008576545743,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 3,
+        "crowds_equal": 7
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 2.041241452319315,
+        "ci95_low": -1.4602161696702105,
+        "ci95_high": 1.4602161696702105,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 2,
+        "crowds_equal": 7
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 2.041241452319315,
+        "ci95_low": -1.4602161696702105,
+        "ci95_high": 1.4602161696702105,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 2,
+        "crowds_equal": 7
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "campus_phone_30_relay": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.5599999999999999,
+        "sd_diff": 0.7589466384404112,
+        "ci95_low": 0.017082280928431004,
+        "ci95_high": 1.1029177190715689,
+        "crowds_a_greater": 6,
+        "crowds_b_greater": 0,
+        "crowds_equal": 4
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.5199999999999999,
+        "sd_diff": 0.6545566777937909,
+        "ci95_low": 0.051758360190996666,
+        "ci95_high": 0.9882416398090031,
+        "crowds_a_greater": 6,
+        "crowds_b_greater": 0,
+        "crowds_equal": 4
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.040000000000000036,
+        "sd_diff": 0.12649110640673528,
+        "ci95_low": -0.13048628651192823,
+        "ci95_high": 0.05048628651192817,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.5599999999999966,
+        "sd_diff": 0.7589466384404079,
+        "ci95_low": -1.1029177190715633,
+        "ci95_high": -0.017082280928430005,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 6,
+        "crowds_equal": 4
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.5199999999999975,
+        "sd_diff": 0.6545566777937896,
+        "ci95_low": -0.9882416398089997,
+        "ci95_high": -0.05175836019099522,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 6,
+        "crowds_equal": 4
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.03999999999999915,
+        "sd_diff": 0.12649110640673247,
+        "ci95_low": -0.05048628651192705,
+        "ci95_high": 0.13048628651192534,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 0,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 13.75,
+        "sd_diff": 16.383002709447915,
+        "ci95_low": 2.0303058712603317,
+        "ci95_high": 25.46969412873967,
+        "crowds_a_greater": 7,
+        "crowds_b_greater": 1,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 13.75,
+        "sd_diff": 16.383002709447915,
+        "ci95_low": 2.0303058712603317,
+        "ci95_high": 25.46969412873967,
+        "crowds_a_greater": 7,
+        "crowds_b_greater": 1,
+        "crowds_equal": 2
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "campus_phone_60": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.4400000000000002,
+        "sd_diff": 0.5481281277625194,
+        "ci95_low": 0.04789275844831137,
+        "ci95_high": 0.832107241551689,
+        "crowds_a_greater": 5,
+        "crowds_b_greater": 0,
+        "crowds_equal": 5
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.4800000000000001,
+        "sd_diff": 0.6477310827461931,
+        "ci95_low": 0.016641096745655115,
+        "ci95_high": 0.943358903254345,
+        "crowds_a_greater": 5,
+        "crowds_b_greater": 0,
+        "crowds_equal": 5
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.039999999999999855,
+        "sd_diff": 0.12649110640673472,
+        "ci95_low": -0.050486286511927964,
+        "ci95_high": 0.13048628651192767,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 0,
+        "crowds_equal": 9
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.44000000000000056,
+        "sd_diff": 0.5481281277625193,
+        "ci95_low": -0.8321072415516892,
+        "ci95_high": -0.04789275844831181,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 5,
+        "crowds_equal": 5
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.4800000000000004,
+        "sd_diff": 0.6477310827461928,
+        "ci95_low": -0.9433589032543452,
+        "ci95_high": -0.016641096745655615,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 5,
+        "crowds_equal": 5
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.039999999999999855,
+        "sd_diff": 0.12649110640673472,
+        "ci95_low": -0.13048628651192767,
+        "ci95_high": 0.050486286511927964,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 3.25,
+        "sd_diff": 6.01502747753953,
+        "ci95_low": -1.0528914456612073,
+        "ci95_high": 7.552891445661207,
+        "crowds_a_greater": 4,
+        "crowds_b_greater": 1,
+        "crowds_equal": 5
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 2.5,
+        "sd_diff": 5.527707983925667,
+        "ci95_low": -1.4542840804904031,
+        "ci95_high": 6.454284080490403,
+        "crowds_a_greater": 4,
+        "crowds_b_greater": 1,
+        "crowds_equal": 5
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.75,
+        "sd_diff": 1.6873713942763822,
+        "ci95_low": -1.9570727798329586,
+        "ci95_high": 0.4570727798329586,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      }
+    },
+    "campus_stress": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -6.0,
+        "sd_diff": 0.0,
+        "ci95_low": -6.0,
+        "ci95_high": -6.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -6.0,
+        "sd_diff": 0.0,
+        "ci95_low": -6.0,
+        "ci95_high": -6.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 300.0,
+        "sd_diff": 6.972166887783963,
+        "ci95_low": 295.01241226724375,
+        "ci95_high": 304.98758773275625,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 261.75,
+        "sd_diff": 4.721405158071764,
+        "ci95_low": 258.37251021428784,
+        "ci95_high": 265.12748978571216,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -38.25,
+        "sd_diff": 5.407042732502778,
+        "ci95_low": -42.117965359574356,
+        "ci95_high": -34.382034640425644,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      }
+    },
+    "grid_stress": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -17.4,
+        "sd_diff": 1.5055453054181633,
+        "ci95_low": -18.477002231482594,
+        "ci95_high": -16.322997768517403,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -17.3,
+        "sd_diff": 1.51086599319156,
+        "ci95_low": -18.380808422225808,
+        "ci95_high": -16.219191577774193,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.09999999999999858,
+        "sd_diff": 0.2249828525701811,
+        "ci95_low": -0.06094303731106028,
+        "ci95_high": 0.26094303731105745,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 0,
+        "crowds_equal": 8
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -13.25,
+        "sd_diff": 8.823107288377617,
+        "ci95_low": -19.56167073086103,
+        "ci95_high": -6.93832926913897,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 9,
+        "crowds_equal": 1
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -10.75,
+        "sd_diff": 10.804448672241962,
+        "ci95_low": -18.479036972893862,
+        "ci95_high": -3.0209630271061387,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 7,
+        "crowds_equal": 1
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 2.5,
+        "sd_diff": 3.3333333333333335,
+        "ci95_low": 0.11547698009778573,
+        "ci95_high": 4.884523019902215,
+        "crowds_a_greater": 5,
+        "crowds_b_greater": 0,
+        "crowds_equal": 5
+      }
+    },
+    "mangalagiri_bomb_L120": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.040000000000000036,
+        "sd_diff": 0.22705848487901872,
+        "ci95_low": -0.12242785521744165,
+        "ci95_high": 0.20242785521744172,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 1,
+        "crowds_equal": 7
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.040000000000000036,
+        "sd_diff": 0.22705848487901872,
+        "ci95_low": -0.12242785521744165,
+        "ci95_high": 0.20242785521744172,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 1,
+        "crowds_equal": 7
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.039999999999997725,
+        "sd_diff": 0.2270584848790169,
+        "ci95_low": -0.2024278552174381,
+        "ci95_high": 0.12242785521744265,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 2,
+        "crowds_equal": 7
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.039999999999997725,
+        "sd_diff": 0.2270584848790169,
+        "ci95_low": -0.2024278552174381,
+        "ci95_high": 0.12242785521744265,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 2,
+        "crowds_equal": 7
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_bomb_L180": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_bomb_L30": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_bomb_L300": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_bomb_L60": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.08000000000000007,
+        "sd_diff": 0.1686548085423137,
+        "ci95_low": -0.040648382015904205,
+        "ci95_high": 0.20064838201590435,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 0,
+        "crowds_equal": 8
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.08000000000000007,
+        "sd_diff": 0.1686548085423137,
+        "ci95_low": -0.040648382015904205,
+        "ci95_high": 0.20064838201590435,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 0,
+        "crowds_equal": 8
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.08000000000000114,
+        "sd_diff": 0.16865480854231596,
+        "ci95_low": -0.20064838201590704,
+        "ci95_high": 0.04064838201590476,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.08000000000000114,
+        "sd_diff": 0.16865480854231596,
+        "ci95_low": -0.20064838201590704,
+        "ci95_high": 0.04064838201590476,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.5,
+        "sd_diff": 1.0540925533894598,
+        "ci95_low": -1.2540523875994012,
+        "ci95_high": 0.2540523875994012,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.5,
+        "sd_diff": 1.0540925533894598,
+        "ci95_low": -1.2540523875994012,
+        "ci95_high": 0.2540523875994012,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_closure": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -21.60000000000001,
+        "sd_diff": 0.0,
+        "ci95_low": -21.60000000000001,
+        "ci95_high": -21.60000000000001,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -21.60000000000001,
+        "sd_diff": 0.0,
+        "ci95_low": -21.60000000000001,
+        "ci95_high": -21.60000000000001,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 112.5,
+        "sd_diff": 3.5355339059327378,
+        "ci95_low": 109.97083140409758,
+        "ci95_high": 115.02916859590242,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 117.5,
+        "sd_diff": 2.6352313834736494,
+        "ci95_low": 115.6148690310015,
+        "ci95_high": 119.3851309689985,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 5.0,
+        "sd_diff": 3.3333333333333335,
+        "ci95_low": 2.6154769800977857,
+        "ci95_high": 7.384523019902215,
+        "crowds_a_greater": 8,
+        "crowds_b_greater": 0,
+        "crowds_equal": 2
+      }
+    },
+    "mangalagiri_phone_100": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.08000000000000007,
+        "sd_diff": 0.1686548085423137,
+        "ci95_low": -0.040648382015904205,
+        "ci95_high": 0.20064838201590435,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 0,
+        "crowds_equal": 8
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.08000000000000007,
+        "sd_diff": 0.1686548085423137,
+        "ci95_low": -0.040648382015904205,
+        "ci95_high": 0.20064838201590435,
+        "crowds_a_greater": 2,
+        "crowds_b_greater": 0,
+        "crowds_equal": 8
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.08000000000000114,
+        "sd_diff": 0.16865480854231596,
+        "ci95_low": -0.20064838201590704,
+        "ci95_high": 0.04064838201590476,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.08000000000000114,
+        "sd_diff": 0.16865480854231596,
+        "ci95_low": -0.20064838201590704,
+        "ci95_high": 0.04064838201590476,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 2,
+        "crowds_equal": 8
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_phone_30": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_phone_30_relay": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_phone_60": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.040000000000000036,
+        "sd_diff": 0.12649110640673528,
+        "ci95_low": -0.05048628651192817,
+        "ci95_high": 0.13048628651192823,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 0,
+        "crowds_equal": 9
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.040000000000000036,
+        "sd_diff": 0.12649110640673528,
+        "ci95_low": -0.05048628651192817,
+        "ci95_high": 0.13048628651192823,
+        "crowds_a_greater": 1,
+        "crowds_b_greater": 0,
+        "crowds_equal": 9
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.039999999999999855,
+        "sd_diff": 0.12649110640673472,
+        "ci95_low": -0.13048628651192767,
+        "ci95_high": 0.050486286511927964,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.039999999999999855,
+        "sd_diff": 0.12649110640673472,
+        "ci95_low": -0.13048628651192767,
+        "ci95_high": 0.050486286511927964,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -0.25,
+        "sd_diff": 0.7905694150420949,
+        "ci95_low": -0.8155392906995509,
+        "ci95_high": 0.3155392906995509,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 1,
+        "crowds_equal": 9
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      }
+    },
+    "mangalagiri_stress": {
+      "caught_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "caught_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "evacuated_pct:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": -20.400000000000006,
+        "sd_diff": 0.0,
+        "ci95_low": -20.400000000000006,
+        "ci95_high": -20.400000000000006,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": -20.400000000000006,
+        "sd_diff": 0.0,
+        "ci95_low": -20.400000000000006,
+        "ci95_high": -20.400000000000006,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 10,
+        "crowds_equal": 0
+      },
+      "evacuated_pct:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 0.0,
+        "sd_diff": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "crowds_a_greater": 0,
+        "crowds_b_greater": 0,
+        "crowds_equal": 10
+      },
+      "median_since_alert_s:SHORTEST_PATH-CONGESTION_AWARE": {
+        "n": 10,
+        "mean_diff": 183.75,
+        "sd_diff": 1.3176156917368247,
+        "ci95_low": 182.80743451550074,
+        "ci95_high": 184.69256548449926,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:SHORTEST_PATH-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 198.75,
+        "sd_diff": 2.124591463996994,
+        "ci95_low": 197.23015882386343,
+        "ci95_high": 200.26984117613657,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      },
+      "median_since_alert_s:CONGESTION_AWARE-LOAD_BALANCED": {
+        "n": 10,
+        "mean_diff": 15.0,
+        "sd_diff": 2.041241452319315,
+        "ci95_low": 13.539783830329789,
+        "ci95_high": 16.46021616967021,
+        "crowds_a_greater": 10,
+        "crowds_b_greater": 0,
+        "crowds_equal": 0
+      }
+    }
+  }
+}

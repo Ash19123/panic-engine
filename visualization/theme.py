@@ -37,12 +37,14 @@ div[data-testid="stMetricLabel"] p { color: #9a9a9a; text-transform: uppercase; 
 .stButton > button { background: #000; color: #fff; border: 1px solid #fff; border-radius: 2px; font-weight: 600; }
 .stButton > button:hover { background: #fff; color: #000; border-color: #fff; }
 .stButton > button:disabled { border-color: #444; color: #555; background: #000; }
-.stButton > button[kind="primary"] { background: #fff; color: #000; }
-.stButton > button[kind="primary"]:hover { background: #d9d9d9; color: #000; }
-.stButton > button[kind="primary"] p, .stButton > button[kind="primary"] span { color: #000 !important; }  /* keep the label dark on the white button, also when the button has a tooltip */
+.stButton button[kind="primary"] { background: #fff; color: #000; }
+.stButton button[kind="primary"]:hover { background: #d9d9d9; color: #000; }
+.stButton button[kind="primary"] p, .stButton button[kind="primary"] span { color: #000 !important; }  /* keep the label dark on the white button, also when the button has a tooltip */
 div[data-baseweb="select"] > div, input, textarea { background: #0b0b0b !important; color: #fff !important; border-color: #2b2b2b !important; }
 span[data-baseweb="tag"] { background:#2b2b2b !important; border:1px solid #777; }
 span[data-baseweb="tag"] * { color:#fff !important; }
+span[data-tag] { background:#2b2b2b !important; border:1px solid #777 !important; }  /* newer Streamlit marks selected-value chips with data-tag */
+span[data-tag], span[data-tag] * { color:#fff !important; }
 div[data-testid="stDeckGlJsonChart"], div[data-testid="stDeckGlJsonChart"] > div { background:#000 !important; }
 div[data-testid="stDeckGlJsonChart"] canvas.mapboxgl-canvas { visibility:hidden !important; }
 div[data-testid="stDeckGlJsonChart"] .mapboxgl-ctrl-attrib, div[data-testid="stDeckGlJsonChart"] .mapboxgl-ctrl-logo { display:none !important; }
@@ -54,7 +56,7 @@ div[data-testid="stDeckGlJsonChart"] .mapboxgl-ctrl-attrib, div[data-testid="stD
 .pe-disclaimer { border-left-color:#777; }
 .pe-legend span { margin-right: 1.1rem; font-size:.85rem; color:#ddd; }
 .pe-sw { display:inline-block; width:.8rem; height:.8rem; margin-right:.35rem; vertical-align:-1px; border:1px solid #fff; }
-.block-container { padding-top: 1.2rem; max-width: 1500px; }
+.block-container { padding-top: 3.8rem; max-width: 1500px; }
 .pe-top { display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap;
   border-bottom:2px solid #fff; padding-bottom:.7rem; margin-bottom:.8rem; }
 .pe-brand { font-size:2.1rem; font-weight:900; letter-spacing:.14em; line-height:1; color:#fff; }

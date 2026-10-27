@@ -1,0 +1,854 @@
+{
+  "V1_bpr": {
+    "cases": [
+      {
+        "alpha": 0.6,
+        "beta": 2.0,
+        "occupancy": 0,
+        "code_s": 71.42857142857143,
+        "formula_s": 71.42857142857143
+      },
+      {
+        "alpha": 0.6,
+        "beta": 2.0,
+        "occupancy": 10,
+        "code_s": 78.28571428571429,
+        "formula_s": 78.28571428571429
+      },
+      {
+        "alpha": 0.6,
+        "beta": 2.0,
+        "occupancy": 25,
+        "code_s": 114.28571428571429,
+        "formula_s": 114.28571428571429
+      },
+      {
+        "alpha": 1.2,
+        "beta": 2.0,
+        "occupancy": 10,
+        "code_s": 85.14285714285714,
+        "formula_s": 85.14285714285714
+      },
+      {
+        "alpha": 0.6,
+        "beta": 4.0,
+        "occupancy": 10,
+        "code_s": 72.52571428571429,
+        "formula_s": 72.52571428571429
+      },
+      {
+        "alpha": 0.3,
+        "beta": 1.0,
+        "occupancy": 20,
+        "code_s": 88.57142857142857,
+        "formula_s": 88.57142857142857
+      }
+    ],
+    "max_abs_error_s": 0.0,
+    "capacity_of_100_m": {
+      "footway": 15,
+      "residential": 25,
+      "tertiary": 32,
+      "primary": 50
+    }
+  },
+  "V2_haversine": {
+    "one_degree_m": 111194.92664455874,
+    "closed_form_m": 111194.92664455873,
+    "campus_to_mangalagiri_m": 4235.663649574234,
+    "equirectangular_m": 4235.663675685966,
+    "relative_difference": 6.164732188594548e-09
+  },
+  "V3_delay": {
+    "n": 20000,
+    "sample_mean_s": 44.93327795,
+    "expected_mean_s": 45.0,
+    "sample_var": 683.8846228951386,
+    "expected_var": 675.0
+  },
+  "V4_V5_mangalagiri": {
+    "area": "mangalagiri",
+    "runs": [
+      {
+        "lead_s": 30,
+        "seed": 1,
+        "strategy": "SHORTEST_PATH",
+        "caught": 11,
+        "bound": 7,
+        "bound_holds": true,
+        "evacuated": 239,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 1,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 11,
+        "bound": 7,
+        "bound_holds": true,
+        "evacuated": 239,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 1,
+        "strategy": "LOAD_BALANCED",
+        "caught": 11,
+        "bound": 7,
+        "bound_holds": true,
+        "evacuated": 239,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 2,
+        "strategy": "SHORTEST_PATH",
+        "caught": 21,
+        "bound": 20,
+        "bound_holds": true,
+        "evacuated": 229,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 2,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 21,
+        "bound": 20,
+        "bound_holds": true,
+        "evacuated": 229,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 2,
+        "strategy": "LOAD_BALANCED",
+        "caught": 21,
+        "bound": 20,
+        "bound_holds": true,
+        "evacuated": 229,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 3,
+        "strategy": "SHORTEST_PATH",
+        "caught": 20,
+        "bound": 18,
+        "bound_holds": true,
+        "evacuated": 230,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 3,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 20,
+        "bound": 18,
+        "bound_holds": true,
+        "evacuated": 230,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 3,
+        "strategy": "LOAD_BALANCED",
+        "caught": 20,
+        "bound": 18,
+        "bound_holds": true,
+        "evacuated": 230,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 4,
+        "strategy": "SHORTEST_PATH",
+        "caught": 16,
+        "bound": 16,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 4,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 16,
+        "bound": 16,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 4,
+        "strategy": "LOAD_BALANCED",
+        "caught": 16,
+        "bound": 16,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 5,
+        "strategy": "SHORTEST_PATH",
+        "caught": 16,
+        "bound": 13,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 5,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 16,
+        "bound": 13,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 30,
+        "seed": 5,
+        "strategy": "LOAD_BALANCED",
+        "caught": 16,
+        "bound": 13,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 1,
+        "strategy": "SHORTEST_PATH",
+        "caught": 7,
+        "bound": 4,
+        "bound_holds": true,
+        "evacuated": 243,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 1,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 7,
+        "bound": 4,
+        "bound_holds": true,
+        "evacuated": 243,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 1,
+        "strategy": "LOAD_BALANCED",
+        "caught": 7,
+        "bound": 4,
+        "bound_holds": true,
+        "evacuated": 243,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 2,
+        "strategy": "SHORTEST_PATH",
+        "caught": 19,
+        "bound": 12,
+        "bound_holds": true,
+        "evacuated": 231,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 2,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 19,
+        "bound": 12,
+        "bound_holds": true,
+        "evacuated": 231,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 2,
+        "strategy": "LOAD_BALANCED",
+        "caught": 19,
+        "bound": 12,
+        "bound_holds": true,
+        "evacuated": 231,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 3,
+        "strategy": "SHORTEST_PATH",
+        "caught": 17,
+        "bound": 11,
+        "bound_holds": true,
+        "evacuated": 233,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 3,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 17,
+        "bound": 11,
+        "bound_holds": true,
+        "evacuated": 233,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 3,
+        "strategy": "LOAD_BALANCED",
+        "caught": 17,
+        "bound": 11,
+        "bound_holds": true,
+        "evacuated": 233,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 4,
+        "strategy": "SHORTEST_PATH",
+        "caught": 16,
+        "bound": 13,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 4,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 15,
+        "bound": 13,
+        "bound_holds": true,
+        "evacuated": 235,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 4,
+        "strategy": "LOAD_BALANCED",
+        "caught": 15,
+        "bound": 13,
+        "bound_holds": true,
+        "evacuated": 235,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 5,
+        "strategy": "SHORTEST_PATH",
+        "caught": 14,
+        "bound": 8,
+        "bound_holds": true,
+        "evacuated": 236,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 5,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 14,
+        "bound": 8,
+        "bound_holds": true,
+        "evacuated": 236,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 5,
+        "strategy": "LOAD_BALANCED",
+        "caught": 14,
+        "bound": 8,
+        "bound_holds": true,
+        "evacuated": 236,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 1,
+        "strategy": "SHORTEST_PATH",
+        "caught": 3,
+        "bound": 0,
+        "bound_holds": true,
+        "evacuated": 247,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 1,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 3,
+        "bound": 0,
+        "bound_holds": true,
+        "evacuated": 247,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 1,
+        "strategy": "LOAD_BALANCED",
+        "caught": 3,
+        "bound": 0,
+        "bound_holds": true,
+        "evacuated": 247,
+        "min_slack_s": 15.32021886500172,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 2,
+        "strategy": "SHORTEST_PATH",
+        "caught": 9,
+        "bound": 1,
+        "bound_holds": true,
+        "evacuated": 241,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 2,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 9,
+        "bound": 1,
+        "bound_holds": true,
+        "evacuated": 241,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 2,
+        "strategy": "LOAD_BALANCED",
+        "caught": 9,
+        "bound": 1,
+        "bound_holds": true,
+        "evacuated": 241,
+        "min_slack_s": 14.573211061186726,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 3,
+        "strategy": "SHORTEST_PATH",
+        "caught": 4,
+        "bound": 2,
+        "bound_holds": true,
+        "evacuated": 246,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 3,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 3,
+        "bound": 2,
+        "bound_holds": true,
+        "evacuated": 247,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 3,
+        "strategy": "LOAD_BALANCED",
+        "caught": 3,
+        "bound": 2,
+        "bound_holds": true,
+        "evacuated": 247,
+        "min_slack_s": 14.549211061186725,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 4,
+        "strategy": "SHORTEST_PATH",
+        "caught": 7,
+        "bound": 3,
+        "bound_holds": true,
+        "evacuated": 243,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 4,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 7,
+        "bound": 3,
+        "bound_holds": true,
+        "evacuated": 243,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 4,
+        "strategy": "LOAD_BALANCED",
+        "caught": 7,
+        "bound": 3,
+        "bound_holds": true,
+        "evacuated": 243,
+        "min_slack_s": 13.928211061186744,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 5,
+        "strategy": "SHORTEST_PATH",
+        "caught": 2,
+        "bound": 1,
+        "bound_holds": true,
+        "evacuated": 248,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 5,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 2,
+        "bound": 1,
+        "bound_holds": true,
+        "evacuated": 248,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 120,
+        "seed": 5,
+        "strategy": "LOAD_BALANCED",
+        "caught": 2,
+        "bound": 1,
+        "bound_holds": true,
+        "evacuated": 248,
+        "min_slack_s": 14.44721106118675,
+        "all_slack_nonnegative": true
+      }
+    ],
+    "n_runs": 45,
+    "bound_holds_all": true,
+    "free_flow_bound_holds_all": true,
+    "mean_bound_over_caught": 0.7140221402214022,
+    "min_slack_s": 13.928211061186744
+  },
+  "V4_V5_campus": {
+    "area": "campus",
+    "runs": [
+      {
+        "lead_s": 60,
+        "seed": 1,
+        "strategy": "SHORTEST_PATH",
+        "caught": 74,
+        "bound": 45,
+        "bound_holds": true,
+        "evacuated": 176,
+        "min_slack_s": 0.04800000000000182,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 1,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 73,
+        "bound": 45,
+        "bound_holds": true,
+        "evacuated": 177,
+        "min_slack_s": 0.04800000000000182,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 1,
+        "strategy": "LOAD_BALANCED",
+        "caught": 73,
+        "bound": 45,
+        "bound_holds": true,
+        "evacuated": 177,
+        "min_slack_s": 0.04800000000000182,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 2,
+        "strategy": "SHORTEST_PATH",
+        "caught": 48,
+        "bound": 32,
+        "bound_holds": true,
+        "evacuated": 202,
+        "min_slack_s": 0.05099999999998772,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 2,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 48,
+        "bound": 32,
+        "bound_holds": true,
+        "evacuated": 202,
+        "min_slack_s": 0.05099999999998772,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 2,
+        "strategy": "LOAD_BALANCED",
+        "caught": 48,
+        "bound": 32,
+        "bound_holds": true,
+        "evacuated": 202,
+        "min_slack_s": 0.05099999999998772,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 3,
+        "strategy": "SHORTEST_PATH",
+        "caught": 50,
+        "bound": 32,
+        "bound_holds": true,
+        "evacuated": 200,
+        "min_slack_s": 0.10599999999999454,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 3,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 49,
+        "bound": 32,
+        "bound_holds": true,
+        "evacuated": 201,
+        "min_slack_s": 0.10599999999999454,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 60,
+        "seed": 3,
+        "strategy": "LOAD_BALANCED",
+        "caught": 49,
+        "bound": 32,
+        "bound_holds": true,
+        "evacuated": 201,
+        "min_slack_s": 0.10599999999999454,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 1,
+        "strategy": "SHORTEST_PATH",
+        "caught": 23,
+        "bound": 5,
+        "bound_holds": true,
+        "evacuated": 227,
+        "min_slack_s": 0.04800000000000182,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 1,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 18,
+        "bound": 5,
+        "bound_holds": true,
+        "evacuated": 232,
+        "min_slack_s": 0.04800000000000182,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 1,
+        "strategy": "LOAD_BALANCED",
+        "caught": 18,
+        "bound": 5,
+        "bound_holds": true,
+        "evacuated": 232,
+        "min_slack_s": 0.04800000000000182,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 2,
+        "strategy": "SHORTEST_PATH",
+        "caught": 21,
+        "bound": 2,
+        "bound_holds": true,
+        "evacuated": 229,
+        "min_slack_s": 0.05099999999998772,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 2,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 20,
+        "bound": 2,
+        "bound_holds": true,
+        "evacuated": 230,
+        "min_slack_s": 0.05099999999998772,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 2,
+        "strategy": "LOAD_BALANCED",
+        "caught": 20,
+        "bound": 2,
+        "bound_holds": true,
+        "evacuated": 230,
+        "min_slack_s": 0.05099999999998772,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 3,
+        "strategy": "SHORTEST_PATH",
+        "caught": 16,
+        "bound": 4,
+        "bound_holds": true,
+        "evacuated": 234,
+        "min_slack_s": 0.10599999999999454,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 3,
+        "strategy": "CONGESTION_AWARE",
+        "caught": 13,
+        "bound": 4,
+        "bound_holds": true,
+        "evacuated": 237,
+        "min_slack_s": 0.10599999999999454,
+        "all_slack_nonnegative": true
+      },
+      {
+        "lead_s": 180,
+        "seed": 3,
+        "strategy": "LOAD_BALANCED",
+        "caught": 13,
+        "bound": 4,
+        "bound_holds": true,
+        "evacuated": 237,
+        "min_slack_s": 0.10599999999999454,
+        "all_slack_nonnegative": true
+      }
+    ],
+    "n_runs": 18,
+    "bound_holds_all": true,
+    "free_flow_bound_holds_all": true,
+    "mean_bound_over_caught": 0.5341246290801187,
+    "min_slack_s": 0.04800000000000182
+  },
+  "V6_expected_mangalagiri": {
+    "area": "mangalagiri",
+    "rows": [
+      {
+        "lead_s": 30,
+        "expected_bound": 13.858945575333516,
+        "mean_realised_bound": 13.3,
+        "seeds": 10
+      },
+      {
+        "lead_s": 60,
+        "expected_bound": 9.09841464916795,
+        "mean_realised_bound": 8.3,
+        "seeds": 10
+      },
+      {
+        "lead_s": 120,
+        "expected_bound": 0.7950246293899881,
+        "mean_realised_bound": 1.1,
+        "seeds": 10
+      },
+      {
+        "lead_s": 180,
+        "expected_bound": 0.0,
+        "mean_realised_bound": 0.0,
+        "seeds": 10
+      }
+    ]
+  },
+  "V6_expected_campus": {
+    "area": "campus",
+    "rows": [
+      {
+        "lead_s": 60,
+        "expected_bound": 34.057974357713356,
+        "mean_realised_bound": 34.1,
+        "seeds": 10
+      },
+      {
+        "lead_s": 180,
+        "expected_bound": 3.130930137836263,
+        "mean_realised_bound": 4.0,
+        "seeds": 10
+      },
+      {
+        "lead_s": 300,
+        "expected_bound": 0.0,
+        "mean_realised_bound": 0.0,
+        "seeds": 10
+      }
+    ]
+  },
+  "V7_bottleneck": {
+    "campus": {
+      "free_flow_walk_s": 344.0388876859612,
+      "route_edges": 3,
+      "q_min_per_s": 0.17122701769354376,
+      "predicted_median_s": 1072.0194438429808,
+      "predicted_share_by_limit_pct": 99.71995165572304,
+      "simulated_median_s": 1105.0,
+      "simulated_share_by_limit_pct": 94.0
+    },
+    "mangalagiri": {
+      "free_flow_walk_s": 711.1894093957575,
+      "route_edges": 20,
+      "q_min_per_s": 0.1917000539263739,
+      "predicted_median_s": 1255.5947046978786,
+      "predicted_share_by_limit_pct": 83.49001957377611,
+      "simulated_median_s": 1305.0,
+      "simulated_share_by_limit_pct": 79.6
+    }
+  }
+}
