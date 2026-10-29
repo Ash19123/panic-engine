@@ -14,6 +14,8 @@ and written (together with every single seed) to the JSON file given by --out, w
 import argparse  # command-line options
 import dataclasses  # copy the model settings with a few values changed
 import json  # write the summary file
+import math  # square root for the jitter
+import random  # reproducible choices of closure origin
 import statistics as stats  # mean and standard deviation
 import tempfile  # throw-away database folder
 from pathlib import Path  # file paths
@@ -59,25 +61,32 @@ def closure_zone(net, start: int, stops, radius: float) -> dict:
 def one_seed(conn, net, seed: int, agents: int, blast: float, lead: float, strike: float, delay: float, bomb_on: bool = True,
              limit: float = 2400.0, walk: float = 1.4, alpha: float = 0.6, beta: float = 2.0, safe_cap: int = 300,
              closure_radius: float = 0.0, closure_time: float = 300.0, phone_reach: float = 1.0,
-             neighbour_radius: float = 0.0, neighbour_delay: float = 30.0, channels_on: bool = False) -> dict:
+             neighbour_radius: float = 0.0, neighbour_delay: float = 30.0, channels_on: bool = False,
+             capacity_scale: float = 1.0, spread_origins: bool = False, closure_random: bool = False, position_jitter: float = 0.0) -> dict:
     """Build one drill, run it with each strategy, and return the outcome of each."""
     starts_default, dests = drill.default_layout(net)  # hypothetical start point and safe stops
     if bomb_on:  # bomb drill: residents of the alert area flee a strike
         bomb = drill.default_bomb_node(net)  # the bomb sits in the middle of the map
         hz = [drill.make_hazard(net, bomb, blast, max(blast * 3.5, 200.0), strike, lead, 0)]  # one bomb
         starts = drill.residents_nodes(net, hz, dests)  # people live inside the alert area
+    elif spread_origins:  # no bomb, but people start where the residents of the bomb drill live
+        probe = drill.make_hazard(net, drill.default_bomb_node(net), blast, max(blast * 3.5, 200.0), strike, lead, 0)  # only used to find the start nodes
+        hz, starts = [], drill.residents_nodes(net, [probe], dests)  # no hazard; many start nodes
     else:  # no bomb: everyone leaves at once from the default start point
         hz, starts = [], starts_default  # no hazard; the default start point
-    zones = [closure_zone(net, starts[0], dests, closure_radius)] if closure_radius > 0 else []  # optional road closure
+    origin = random.Random(seed).choice(starts) if closure_random else starts[0]  # the start whose route the closure sits on (does not depend on the routing rule)
+    zones = [closure_zone(net, origin, dests, closure_radius)] if closure_radius > 0 else []  # optional road closure
     channels = {}  # how the alert reaches people (empty = everyone is reached by phone at once)
     if channels_on or phone_reach < 1.0 or neighbour_radius > 0:  # a channel scenario
         channels = {"phone_reach": phone_reach, "phone_delay_max_s": 15.0, "sirens": [],
-                    "neighbour_radius_m": neighbour_radius, "neighbour_delay_s": neighbour_delay}  # phone share, relay between neighbours
+                    "neighbour_radius_m": neighbour_radius, "neighbour_delay_s": neighbour_delay, "position_jitter_m": position_jitter}  # phone share, relay between neighbours
     cfg = drill.build_config(net, name=f"compare seed {seed} lead {lead:.0f}", strategy="SHORTEST_PATH", agents=agents, seed=seed,
                              dt=5.0, limit=limit, starts=starts, safe_nodes=dests, safe_cap=safe_cap, safe_thr=8, zones=zones,
                              danger_t=closure_time, hazards=hz, dist="even", delay=delay, spread=0.0, walking_speed=walk,
                              alert_channels=channels)  # same defaults as the dashboard
     cfg.params = dataclasses.replace(cfg.params, bpr_alpha=alpha, bpr_beta=beta)  # congestion constants under test
+    if capacity_scale != 1.0:  # scale every road capacity (persons per metre x capacity_scale)
+        cfg.params.edge_capacity_overrides = {eid: max(2, round(capacity_scale * e.capacity)) for eid, e in net.edges.items()}  # new capacities
     sid = repo.save_scenario(conn, cfg, net)  # one scenario row shared by all strategies
     repo.ensure_population(conn, sid, net, cfg)  # one crowd shared by all strategies
     offset = float(max(0.0, strike - lead)) if bomb_on else 0.0  # the alert goes out at this simulated second
@@ -89,11 +98,14 @@ def one_seed(conn, net, seed: int, agents: int, blast: float, lead: float, strik
         caught = int(hzs["caught_in_blast"] or 0)  # people inside the blast at the strike
         total = int(run["total_agents"])  # crowd size
         med = run["median_evacuation_time_seconds"]  # median over people who arrived, counted from simulated second 0
+        times = sorted(r[0] for r in conn.execute("SELECT evacuation_time_seconds FROM agent_outcomes WHERE run_id=? AND final_state='EVACUATED'", (rid,)))  # arrival times
+        half = (total + 1) // 2  # people needed for half of the whole crowd
+        t50 = (times[half - 1] - offset) if len(times) >= half else None  # time by which half of ALL people arrived; None = fewer than half ever did
         out[strat] = {"evacuated": int(run["evacuated_agents"]), "caught": caught,
                       "unable": int(run["failed_agents"]) - caught,  # no route / safe stops full or lost
                       "unresolved": int(run["unresolved_agents"]), "total": total,
                       "safe_before_strike": int(hzs["safe_before_strike"] or 0),
-                      "median_s": med, "median_since_alert_s": (med - offset) if med is not None else None,  # counted from the alert
+                      "median_s": med, "median_since_alert_s": (med - offset) if med is not None else None, "t50_all_since_alert_s": t50,  # counted from the alert
                       "p95_since_alert_s": (run["percentile_95_evacuation_time_seconds"] - offset) if run["percentile_95_evacuation_time_seconds"] is not None else None}
     return out  # results for this seed
 
@@ -109,6 +121,7 @@ def summarise(rows: list) -> dict:  # mean and spread over the seeds
         med = [x["median_s"] for x in r if x["median_s"] is not None]  # median walking times that exist
         meda = [x["median_since_alert_s"] for x in r if x["median_since_alert_s"] is not None]  # the same, counted from the alert
         p95 = [x["p95_since_alert_s"] for x in r if x["p95_since_alert_s"] is not None]  # 95th percentile, counted from the alert
+        t50 = [x.get("t50_all_since_alert_s") for x in r]  # time for half of all people to arrive (None = never)
         summary[strat] = {"safe_pct": ms([100.0 * x["safe_before_strike"] / total for x in r]),  # reached safety before the strike
                           "evacuated_pct": ms([100.0 * x["evacuated"] / total for x in r]),  # reached a safe stop at any time
                           "caught_pct": ms([100.0 * x["caught"] / total for x in r]),  # inside the blast at the strike
@@ -116,7 +129,9 @@ def summarise(rows: list) -> dict:  # mean and spread over the seeds
                           "unable_pct": ms([100.0 * x["unable"] / total for x in r]),  # no route / full or lost safe stops
                           "median_s": ms(med) if med else None,  # median walking time from simulated second 0
                           "median_since_alert_s": ms(meda) if meda else None,  # median walking time from the alert
-                          "p95_since_alert_s": ms(p95) if p95 else None}  # 95th percentile from the alert
+                          "p95_since_alert_s": ms(p95) if p95 else None,  # 95th percentile from the alert
+                          "t50_all_since_alert_s": ms([v for v in t50 if v is not None]) if t50 and all(v is not None for v in t50) else None,  # half of all people, only if every crowd reached it
+                          "t50_crowds_reached": sum(1 for v in t50 if v is not None)}  # crowds in which half of all people arrived
     return summary  # the table
 
 
@@ -141,6 +156,10 @@ def main() -> None:  # command-line entry point
     ap.add_argument("--neighbour-radius", type=float, default=0.0)  # metres within which people tell each other
     ap.add_argument("--channels", action="store_true")  # use the alert-channel model even when everyone has a phone
     ap.add_argument("--neighbour-delay", type=float, default=30.0)  # seconds for each hop of that relay
+    ap.add_argument("--capacity-scale", type=float, default=1.0)  # multiply every road capacity (4 = 1 person/m, 8 = 2 persons/m)
+    ap.add_argument("--spread-origins", action="store_true")  # no-bomb runs: start where the residents of the drill live
+    ap.add_argument("--closure-random", action="store_true")  # closure on the route from a randomly drawn start (same for every rule)
+    ap.add_argument("--position-jitter", type=float, default=0.0)  # metres: relay positions are spread this far around the start node
     ap.add_argument("--out", default=str(settings.DATA_DIR / "strategy_comparison.json"))  # summary file
     args = ap.parse_args()  # read the options
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:  # a throw-away database so the project database stays clean
@@ -149,7 +168,8 @@ def main() -> None:  # command-line entry point
             net = load_network(conn, args.map)  # the road network
             rows = [one_seed(conn, net, s, args.agents, args.blast, args.lead, args.strike, args.delay, not args.no_bomb, args.limit,
                              args.walk, args.alpha, args.beta, args.safe_cap, args.closure_radius, args.closure_time,
-                             args.phone_reach, args.neighbour_radius, args.neighbour_delay, args.channels) for s in args.seeds]  # run every seed
+                             args.phone_reach, args.neighbour_radius, args.neighbour_delay, args.channels,
+                             args.capacity_scale, args.spread_origins, args.closure_random, args.position_jitter) for s in args.seeds]  # run every seed
             nodes, edges = len(net.nodes), len(net.edges)  # size of the map
         finally:  # close the connection
             conn.close()  # release the file
@@ -159,6 +179,7 @@ def main() -> None:  # command-line entry point
                "limit_s": args.limit, "walk_mps": args.walk, "bpr_alpha": args.alpha, "bpr_beta": args.beta, "safe_cap": args.safe_cap,
                "closure_radius_m": args.closure_radius, "closure_time_s": args.closure_time, "phone_reach": args.phone_reach,
                "neighbour_radius_m": args.neighbour_radius, "neighbour_delay_s": args.neighbour_delay, "channels": args.channels,
+               "capacity_scale": args.capacity_scale, "spread_origins": args.spread_origins, "closure_random": args.closure_random, "position_jitter_m": args.position_jitter,
                "strategies": summary, "per_seed": rows}  # what the site and the paper read
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)  # make sure the folder exists
     Path(args.out).write_text(json.dumps(payload, indent=2), encoding="utf-8")  # write the summary

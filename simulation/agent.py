@@ -117,6 +117,11 @@ def apply_alert_channels(network: RoadNetwork, agents: List[Agent], cfg: Scenari
         lat0 = sum(network.nodes[a.origin_node].lat for a in inside) / len(inside)  # mean latitude for metre conversion
         kx, ky = math.cos(math.radians(lat0)) * 111_320.0, 110_540.0  # metres per degree of longitude and latitude
         pos = {a.agent_id: (network.nodes[a.origin_node].lon * kx, network.nodes[a.origin_node].lat * ky) for a in inside}  # positions in metres
+        jit = float(channels.get("position_jitter_m", 0.0))  # spread people around their start node (0 = all on the node)
+        if jit > 0:  # draw only when asked, so runs without it keep the same random stream
+            for aid in sorted(pos):  # fixed order
+                rr, th = jit * math.sqrt(rng.random()), 2 * math.pi * rng.random()  # uniform point in a disc
+                pos[aid] = (pos[aid][0] + rr * math.cos(th), pos[aid][1] + rr * math.sin(th))  # shifted position in metres
         cells = {}  # grid of buckets so neighbours can be found quickly
         for aid, (x, y) in pos.items():  # every person
             cells.setdefault((int(x // radius), int(y // radius)), []).append(aid)  # file them in their grid cell

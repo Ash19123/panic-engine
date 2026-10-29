@@ -31,6 +31,10 @@
   "neighbour_radius_m": 0.0,
   "neighbour_delay_s": 30.0,
   "channels": false,
+  "capacity_scale": 1.0,
+  "spread_origins": false,
+  "closure_random": false,
+  "position_jitter_m": 0.0,
   "strategies": {
     "SHORTEST_PATH": {
       "safe_pct": {
@@ -80,7 +84,14 @@
         "sd": 0.0,
         "min": 1755.0,
         "max": 1755.0
-      }
+      },
+      "t50_all_since_alert_s": {
+        "mean": 1480.0,
+        "sd": 0.0,
+        "min": 1480.0,
+        "max": 1480.0
+      },
+      "t50_crowds_reached": 10
     },
     "CONGESTION_AWARE": {
       "safe_pct": {
@@ -130,7 +141,14 @@
         "sd": 19.1775,
         "min": 1430.0,
         "max": 1475.0
-      }
+      },
+      "t50_all_since_alert_s": {
+        "mean": 1214.0,
+        "sd": 3.1623,
+        "min": 1205.0,
+        "max": 1215.0
+      },
+      "t50_crowds_reached": 10
     },
     "LOAD_BALANCED": {
       "safe_pct": {
@@ -180,7 +198,14 @@
         "sd": 3.3747,
         "min": 1570.0,
         "max": 1580.0
-      }
+      },
+      "t50_all_since_alert_s": {
+        "mean": 1208.0,
+        "sd": 2.582,
+        "min": 1205.0,
+        "max": 1210.0
+      },
+      "t50_crowds_reached": 10
     }
   },
   "per_seed": [
@@ -194,6 +219,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -205,6 +231,7 @@
         "safe_before_strike": 243,
         "median_s": 1210.0,
         "median_since_alert_s": 1210.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1450.0
       },
       "LOAD_BALANCED": {
@@ -216,6 +243,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1210.0,
         "p95_since_alert_s": 1570.0
       }
     },
@@ -229,6 +257,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -240,6 +269,7 @@
         "safe_before_strike": 243,
         "median_s": 1210.0,
         "median_since_alert_s": 1210.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1435.0
       },
       "LOAD_BALANCED": {
@@ -251,6 +281,7 @@
         "safe_before_strike": 243,
         "median_s": 1200.0,
         "median_since_alert_s": 1200.0,
+        "t50_all_since_alert_s": 1205.0,
         "p95_since_alert_s": 1575.0
       }
     },
@@ -264,6 +295,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -275,6 +307,7 @@
         "safe_before_strike": 243,
         "median_s": 1210.0,
         "median_since_alert_s": 1210.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1475.0
       },
       "LOAD_BALANCED": {
@@ -286,6 +319,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1205.0,
         "p95_since_alert_s": 1570.0
       }
     },
@@ -299,6 +333,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -310,6 +345,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1475.0
       },
       "LOAD_BALANCED": {
@@ -321,6 +357,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1210.0,
         "p95_since_alert_s": 1580.0
       }
     },
@@ -334,6 +371,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -345,6 +383,7 @@
         "safe_before_strike": 243,
         "median_s": 1210.0,
         "median_since_alert_s": 1210.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1440.0
       },
       "LOAD_BALANCED": {
@@ -356,6 +395,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1210.0,
         "p95_since_alert_s": 1575.0
       }
     },
@@ -369,6 +409,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -380,6 +421,7 @@
         "safe_before_strike": 243,
         "median_s": 1210.0,
         "median_since_alert_s": 1210.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1430.0
       },
       "LOAD_BALANCED": {
@@ -391,6 +433,7 @@
         "safe_before_strike": 243,
         "median_s": 1200.0,
         "median_since_alert_s": 1200.0,
+        "t50_all_since_alert_s": 1210.0,
         "p95_since_alert_s": 1575.0
       }
     },
@@ -404,6 +447,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -415,6 +459,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1430.0
       },
       "LOAD_BALANCED": {
@@ -426,6 +471,7 @@
         "safe_before_strike": 243,
         "median_s": 1200.0,
         "median_since_alert_s": 1200.0,
+        "t50_all_since_alert_s": 1205.0,
         "p95_since_alert_s": 1570.0
       }
     },
@@ -439,6 +485,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -450,6 +497,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1450.0
       },
       "LOAD_BALANCED": {
@@ -461,6 +509,7 @@
         "safe_before_strike": 243,
         "median_s": 1200.0,
         "median_since_alert_s": 1200.0,
+        "t50_all_since_alert_s": 1210.0,
         "p95_since_alert_s": 1575.0
       }
     },
@@ -474,6 +523,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -485,6 +535,7 @@
         "safe_before_strike": 243,
         "median_s": 1200.0,
         "median_since_alert_s": 1200.0,
+        "t50_all_since_alert_s": 1205.0,
         "p95_since_alert_s": 1470.0
       },
       "LOAD_BALANCED": {
@@ -496,6 +547,7 @@
         "safe_before_strike": 243,
         "median_s": 1200.0,
         "median_since_alert_s": 1200.0,
+        "t50_all_since_alert_s": 1205.0,
         "p95_since_alert_s": 1570.0
       }
     },
@@ -509,6 +561,7 @@
         "safe_before_strike": 189,
         "median_s": 1320.0,
         "median_since_alert_s": 1320.0,
+        "t50_all_since_alert_s": 1480.0,
         "p95_since_alert_s": 1755.0
       },
       "CONGESTION_AWARE": {
@@ -520,6 +573,7 @@
         "safe_before_strike": 243,
         "median_s": 1210.0,
         "median_since_alert_s": 1210.0,
+        "t50_all_since_alert_s": 1215.0,
         "p95_since_alert_s": 1475.0
       },
       "LOAD_BALANCED": {
@@ -531,6 +585,7 @@
         "safe_before_strike": 243,
         "median_s": 1205.0,
         "median_since_alert_s": 1205.0,
+        "t50_all_since_alert_s": 1210.0,
         "p95_since_alert_s": 1575.0
       }
     }

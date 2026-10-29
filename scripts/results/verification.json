@@ -850,5 +850,21 @@
       "simulated_median_s": 1305.0,
       "simulated_share_by_limit_pct": 79.6
     }
+  },
+  "V8_required_lead": {
+    "campus": {
+      "start_nodes_in_blast": 9,
+      "T_o_max_s": 131.70398943597903,
+      "T_o_mean_s": 29.185021095084274,
+      "delay_max_s": 90.0,
+      "required_lead_s": 221.70398943597903
+    },
+    "mangalagiri": {
+      "start_nodes_in_blast": 4,
+      "T_o_max_s": 47.172531994823736,
+      "T_o_mean_s": 19.131439105506914,
+      "delay_max_s": 90.0,
+      "required_lead_s": 137.17253199482374
+    }
   }
 }

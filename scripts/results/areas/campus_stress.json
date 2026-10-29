@@ -31,6 +31,10 @@
   "neighbour_radius_m": 0.0,
   "neighbour_delay_s": 30.0,
   "channels": false,
+  "capacity_scale": 1.0,
+  "spread_origins": false,
+  "closure_random": false,
+  "position_jitter_m": 0.0,
   "strategies": {
     "SHORTEST_PATH": {
       "safe_pct": {
@@ -80,7 +84,14 @@
         "sd": 0.0,
         "min": 1735.0,
         "max": 1735.0
-      }
+      },
+      "t50_all_since_alert_s": {
+        "mean": 1150.0,
+        "sd": 0.0,
+        "min": 1150.0,
+        "max": 1150.0
+      },
+      "t50_crowds_reached": 10
     },
     "CONGESTION_AWARE": {
       "safe_pct": {
@@ -130,7 +141,14 @@
         "sd": 43.0794,
         "min": 1120.0,
         "max": 1230.0
-      }
+      },
+      "t50_all_since_alert_s": {
+        "mean": 804.5,
+        "sd": 6.4334,
+        "min": 800.0,
+        "max": 820.0
+      },
+      "t50_crowds_reached": 10
     },
     "LOAD_BALANCED": {
       "safe_pct": {
@@ -180,7 +198,14 @@
         "sd": 2.1082,
         "min": 1375.0,
         "max": 1380.0
-      }
+      },
+      "t50_all_since_alert_s": {
+        "mean": 842.0,
+        "sd": 4.8305,
+        "min": 835.0,
+        "max": 850.0
+      },
+      "t50_crowds_reached": 10
     }
   },
   "per_seed": [
@@ -194,6 +219,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -205,6 +231,7 @@
         "safe_before_strike": 250,
         "median_s": 810.0,
         "median_since_alert_s": 810.0,
+        "t50_all_since_alert_s": 810.0,
         "p95_since_alert_s": 1230.0
       },
       "LOAD_BALANCED": {
@@ -216,6 +243,7 @@
         "safe_before_strike": 250,
         "median_s": 847.5,
         "median_since_alert_s": 847.5,
+        "t50_all_since_alert_s": 845.0,
         "p95_since_alert_s": 1375.0
       }
     },
@@ -229,6 +257,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -240,6 +269,7 @@
         "safe_before_strike": 250,
         "median_s": 800.0,
         "median_since_alert_s": 800.0,
+        "t50_all_since_alert_s": 800.0,
         "p95_since_alert_s": 1130.0
       },
       "LOAD_BALANCED": {
@@ -251,6 +281,7 @@
         "safe_before_strike": 250,
         "median_s": 842.5,
         "median_since_alert_s": 842.5,
+        "t50_all_since_alert_s": 840.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -264,6 +295,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -275,6 +307,7 @@
         "safe_before_strike": 250,
         "median_s": 805.0,
         "median_since_alert_s": 805.0,
+        "t50_all_since_alert_s": 805.0,
         "p95_since_alert_s": 1120.0
       },
       "LOAD_BALANCED": {
@@ -286,6 +319,7 @@
         "safe_before_strike": 250,
         "median_s": 835.0,
         "median_since_alert_s": 835.0,
+        "t50_all_since_alert_s": 835.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -299,6 +333,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -310,6 +345,7 @@
         "safe_before_strike": 250,
         "median_s": 822.5,
         "median_since_alert_s": 822.5,
+        "t50_all_since_alert_s": 820.0,
         "p95_since_alert_s": 1230.0
       },
       "LOAD_BALANCED": {
@@ -321,6 +357,7 @@
         "safe_before_strike": 250,
         "median_s": 850.0,
         "median_since_alert_s": 850.0,
+        "t50_all_since_alert_s": 850.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -334,6 +371,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -345,6 +383,7 @@
         "safe_before_strike": 250,
         "median_s": 805.0,
         "median_since_alert_s": 805.0,
+        "t50_all_since_alert_s": 805.0,
         "p95_since_alert_s": 1130.0
       },
       "LOAD_BALANCED": {
@@ -356,6 +395,7 @@
         "safe_before_strike": 250,
         "median_s": 847.5,
         "median_since_alert_s": 847.5,
+        "t50_all_since_alert_s": 845.0,
         "p95_since_alert_s": 1375.0
       }
     },
@@ -369,6 +409,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -380,6 +421,7 @@
         "safe_before_strike": 250,
         "median_s": 802.5,
         "median_since_alert_s": 802.5,
+        "t50_all_since_alert_s": 800.0,
         "p95_since_alert_s": 1120.0
       },
       "LOAD_BALANCED": {
@@ -391,6 +433,7 @@
         "safe_before_strike": 250,
         "median_s": 845.0,
         "median_since_alert_s": 845.0,
+        "t50_all_since_alert_s": 845.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -404,6 +447,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -415,6 +459,7 @@
         "safe_before_strike": 250,
         "median_s": 800.0,
         "median_since_alert_s": 800.0,
+        "t50_all_since_alert_s": 800.0,
         "p95_since_alert_s": 1150.0
       },
       "LOAD_BALANCED": {
@@ -426,6 +471,7 @@
         "safe_before_strike": 250,
         "median_s": 840.0,
         "median_since_alert_s": 840.0,
+        "t50_all_since_alert_s": 840.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -439,6 +485,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -450,6 +497,7 @@
         "safe_before_strike": 250,
         "median_s": 805.0,
         "median_since_alert_s": 805.0,
+        "t50_all_since_alert_s": 805.0,
         "p95_since_alert_s": 1125.0
       },
       "LOAD_BALANCED": {
@@ -461,6 +509,7 @@
         "safe_before_strike": 250,
         "median_s": 845.0,
         "median_since_alert_s": 845.0,
+        "t50_all_since_alert_s": 845.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -474,6 +523,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -485,6 +535,7 @@
         "safe_before_strike": 250,
         "median_s": 800.0,
         "median_since_alert_s": 800.0,
+        "t50_all_since_alert_s": 800.0,
         "p95_since_alert_s": 1170.0
       },
       "LOAD_BALANCED": {
@@ -496,6 +547,7 @@
         "safe_before_strike": 250,
         "median_s": 842.5,
         "median_since_alert_s": 842.5,
+        "t50_all_since_alert_s": 840.0,
         "p95_since_alert_s": 1380.0
       }
     },
@@ -509,6 +561,7 @@
         "safe_before_strike": 235,
         "median_s": 1105.0,
         "median_since_alert_s": 1105.0,
+        "t50_all_since_alert_s": 1150.0,
         "p95_since_alert_s": 1735.0
       },
       "CONGESTION_AWARE": {
@@ -520,6 +573,7 @@
         "safe_before_strike": 250,
         "median_s": 800.0,
         "median_since_alert_s": 800.0,
+        "t50_all_since_alert_s": 800.0,
         "p95_since_alert_s": 1130.0
       },
       "LOAD_BALANCED": {
@@ -531,6 +585,7 @@
         "safe_before_strike": 250,
         "median_s": 837.5,
         "median_since_alert_s": 837.5,
+        "t50_all_since_alert_s": 835.0,
         "p95_since_alert_s": 1380.0
       }
     }

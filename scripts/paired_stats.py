@@ -47,6 +47,23 @@ def paired(a: list, b: list) -> dict:  # statistics of the differences a_k - b_k
             "crowds_equal": sum(1 for v in d if abs(v) <= 1e-9)}
 
 
+def p_value(r: dict) -> float:  # two-sided p-value of "mean difference = 0" from the paired t statistic
+    n, s = r["n"], r["sd_diff"]
+    if s == 0:  # all differences equal: p = 1 if they are all zero, else the effect is exact
+        return 1.0 if r["mean_diff"] == 0 else 0.0
+    t = abs(r["mean_diff"]) / (s / math.sqrt(n))  # t statistic with n - 1 degrees of freedom
+    return max(0.0, min(1.0, 2.0 * (1.0 - t_cdf(t, n - 1))))
+
+
+def holm(ps: dict) -> dict:  # Holm step-down adjusted p-values for a family of tests
+    order = sorted(ps, key=ps.get)  # smallest p first
+    m, out, run = len(order), {}, 0.0
+    for i, k in enumerate(order):
+        run = max(run, min(1.0, (m - i) * ps[k]))  # adjusted p can never decrease along the sorted list
+        out[k] = run
+    return out
+
+
 def metric(row: dict, name: str):  # one number of one crowd and one rule
     if name == "caught_pct":
         return 100.0 * row["caught"] / row["total"]
@@ -57,9 +74,13 @@ def metric(row: dict, name: str):  # one number of one crowd and one rule
 
 def main() -> None:
     out = {"t_quantile_0.975_df9": t_quantile(0.975, 9), "scenarios": {}}  # report
-    for f in sorted(glob.glob(str(RESULTS / "areas" / "*.json"))):  # every scenario
+    files = [(Path(f).stem, f) for f in sorted(glob.glob(str(RESULTS / "areas" / "*.json")))]  # the ten-crowd scenarios of the paper
+    files += [("review/" + Path(f).stem, f) for f in sorted(glob.glob(str(RESULTS / "review" / "*.json")))]  # review runs
+    files += [("sens/" + Path(f).stem, f) for f in sorted(glob.glob(str(RESULTS / "sens" / "*.json")))]  # sensitivity runs
+    for name, f in files:  # every scenario
         d = json.loads(Path(f).read_text(encoding="utf-8"))  # its saved results
-        name = Path(f).stem  # scenario name
+        if "per_seed" not in d:  # old file without individual crowds
+            continue
         out["scenarios"][name] = {}
         for m in ("caught_pct", "evacuated_pct", "median_since_alert_s"):  # the metrics
             for a, b in PAIRS:  # the rule pairs
@@ -68,6 +89,12 @@ def main() -> None:
                 if any(v is None for v in xa + xb):  # a crowd with nobody evacuated has no median
                     continue
                 out["scenarios"][name][f"{m}:{a}-{b}"] = paired(xa, xb)
+                out["scenarios"][name][f"{m}:{a}-{b}"]["p"] = p_value(out["scenarios"][name][f"{m}:{a}-{b}"])
+    # Holm correction over the family of the nine bomb-drill comparisons "shortest path - congestion aware, people caught"
+    fam = {n: s["caught_pct:SHORTEST_PATH-CONGESTION_AWARE"]["p"] for n, s in out["scenarios"].items()
+           if "_bomb_L" in n and "caught_pct:SHORTEST_PATH-CONGESTION_AWARE" in s}
+    adj = holm(fam)
+    out["holm_family_caught_SP_CA"] = {n: {"p": fam[n], "p_holm": adj[n]} for n in fam}
     (RESULTS / "paired.json").write_text(json.dumps(out, indent=2), encoding="utf-8")  # save for the paper
     print(f"t(0.975, 9) = {out['t_quantile_0.975_df9']:.4f} (table value 2.2622)")
     for name in ("campus_bomb_L60", "campus_bomb_L180", "campus_stress", "mangalagiri_bomb_L60", "mangalagiri_closure"):

@@ -202,8 +202,36 @@ def v7_bottleneck() -> dict:  # discharge-time prediction for the shortest-path 
     return res
 
 
+def v8_required_lead() -> dict:  # planning rule: nobody is caught once lead > d_max + the longest time to walk out of the blast circle
+    res = {}
+    for area in ("campus", "mangalagiri"):
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
+            conn = init_db(str(Path(tmp) / "v8.db"))
+            try:
+                net = load_network(conn, area)
+                g = free_flow_graph(net)
+                rev = g.reverse(copy=False)
+                cfg, sid, hz, dests = setup(conn, net, 1, 180)
+                inside = {n for n, nd in net.nodes.items() if geo.haversine_m(nd.lat, nd.lon, hz["lat"], hz["lon"]) <= hz["blast_radius_m"]}
+                boundary = [n for n in inside if any(v not in inside for v in g.successors(n))]
+                tb = nx.multi_source_dijkstra_path_length(rev, boundary, weight="t")
+                starts = [o for o in drill.residents_nodes(net, [hz], dests) if o in inside]
+                tmax = max(tb.get(o, math.inf) for o in starts)
+                res[area] = {"start_nodes_in_blast": len(starts), "T_o_max_s": tmax, "T_o_mean_s": stats.fmean(tb[o] for o in starts),
+                             "delay_max_s": float(cfg.params.departure_delay_max_seconds), "required_lead_s": float(cfg.params.departure_delay_max_seconds) + tmax}
+            finally:
+                conn.close()
+    return res
+
+
 def main() -> None:  # run every check
     import sys  # command line
+    if len(sys.argv) > 1 and sys.argv[1] == "v8":  # only the planning rule
+        report = json.loads(OUT.read_text(encoding="utf-8"))
+        report["V8_required_lead"] = v8_required_lead()
+        OUT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(json.dumps(report["V8_required_lead"], indent=1))
+        return
     if len(sys.argv) > 1 and sys.argv[1] == "v7":  # only the bottleneck prediction
         report = json.loads(OUT.read_text(encoding="utf-8"))
         report["V7_bottleneck"] = v7_bottleneck()
@@ -221,7 +249,8 @@ def main() -> None:  # run every check
               "V4_V5_mangalagiri": v4_v5("mangalagiri", [30, 60, 120], range(1, 6)),
               "V4_V5_campus": v4_v5("campus", [60, 180], range(1, 4)),
               "V6_expected_mangalagiri": v6_expected("mangalagiri", [30, 60, 120, 180], range(1, 11)),
-              "V6_expected_campus": v6_expected("campus", [60, 180, 300], range(1, 11)), "V7_bottleneck": v7_bottleneck()}
+              "V6_expected_campus": v6_expected("campus", [60, 180, 300], range(1, 11)), "V7_bottleneck": v7_bottleneck(),
+              "V8_required_lead": v8_required_lead()}
     OUT.write_text(json.dumps(report, indent=2), encoding="utf-8")  # save for the paper
     print(json.dumps({k: (v if not isinstance(v, dict) or "runs" not in v else {kk: vv for kk, vv in v.items() if kk != "runs"}) for k, v in report.items()}, indent=2))
 
